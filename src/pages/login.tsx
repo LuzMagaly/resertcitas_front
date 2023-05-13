@@ -5,9 +5,15 @@ import Image from "react-bootstrap/Image"
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Stack from 'react-bootstrap/Stack'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import { Authenticate } from '../services/authService'
+//import { useSession } from "../hooks/useSession"
+import { AuthContext } from '../providers/authContext'
+
 
 const Login = () => {
+  //const { login } = useSession();
+  const { session, setSession } = useContext(AuthContext);
 
   const [user, setUser] = useState('')
   const [pass, setPass] = useState('')
@@ -15,24 +21,37 @@ const Login = () => {
   const [userState, setUserState] = useState(0)
   const [passState, setPassState] = useState(0)
 
-  const [userMessage, setUserMessage] = useState('Ingresa tu usuario')
-  const [passMessage, setPassMessage] = useState('Ingresa tu contraseña')
+  const [userMessage, setUserMessage] = useState('')
+  const [passMessage, setPassMessage] = useState('')
 
   const handleOnSubmit = () => {
-    if(user.trim() == ''){
+    if(user.trim() === ''){
+      setUserMessage('Ingresa tu usuario')
       setUserState(2)
     }
 
-    if(pass.trim() == ''){
+    if(pass.trim() === ''){
+      setPassMessage('Ingresa tu contraseña')
       setPassState(2)
     }
 
-    if(pass.trim() == '' || user.trim() == ''){
-      console.log('Empty credentials')
+    if(pass.trim() === '' || user.trim() === ''){
       return
     }
 
-    console.log('good luck!')
+    const resultUser = Authenticate(user.trim(), pass.trim())
+    if(!resultUser){
+      setUserMessage('Credenciales inválidas')
+      setPassMessage('Credenciales inválidas')
+      setUserState(2)
+      setPassState(2)
+      return
+    }
+
+    setSession('login')
+
+    //const { user, setUser } = useContext(AuthContext);
+    //login(resultUser)
   }
 
   const handleOnChangeUser = (value: string) => {
@@ -46,11 +65,13 @@ const Login = () => {
   }
 
   const handleOnBlurUser = () => {
-    setUserState((user.trim() != '') ? 1 : 2)
+    setUserMessage('Ingresa tu usuario')
+    setUserState((user.trim() !== '') ? 1 : 2)
   }
 
   const handleOnBlurPass = () => {
-    setPassState((pass.trim() != '') ? 1 : 2)
+    setPassMessage('Ingresa tu contraseña')
+    setPassState((pass.trim() !== '') ? 1 : 2)
   }
 
   return (
@@ -66,9 +87,9 @@ const Login = () => {
                   <Form>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                       <Form.Label>Usuario</Form.Label>
-                      <Form.Control type="email" placeholder="Ingresa usuario" onChange={ (event: any) => handleOnChangeUser(event.target.value) } onBlur={ handleOnBlurUser } value={ user } isInvalid={ (userState == 2)? true : false } isValid={ (userState == 1)? true : false } required />
+                      <Form.Control type="email" placeholder="Ingresa usuario" onChange={ (event: any) => handleOnChangeUser(event.target.value) } onBlur={ handleOnBlurUser } value={ user } isInvalid={ (userState === 2)? true : false } isValid={ (userState === 1)? true : false } required />
                       {
-                        userState == 2 &&
+                        userState === 2 &&
                         <Form.Text className="text-danger">
                           { userMessage }
                         </Form.Text>
@@ -77,9 +98,9 @@ const Login = () => {
 
                     <Form.Group className="mb-3" controlId="formBasicPassword">
                       <Form.Label>Contraseña</Form.Label>
-                      <Form.Control type="password" placeholder="Contraseña" onChange={ (event: any) => handleOnChangePass(event.target.value) } onBlur={ handleOnBlurPass } value={ pass } isInvalid={ (passState == 2)? true : false } isValid={ (passState == 1)? true : false } required />
+                      <Form.Control type="password" placeholder="Contraseña" onChange={ (event: any) => handleOnChangePass(event.target.value) } onBlur={ handleOnBlurPass } value={ pass } isInvalid={ (passState === 2)? true : false } isValid={ (passState === 1)? true : false } required />
                       {
-                        passState == 2 &&
+                        passState === 2 &&
                         <Form.Text className="text-danger">
                           { passMessage }
                         </Form.Text>

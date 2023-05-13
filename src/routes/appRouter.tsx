@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { useSession } from '../hooks/useSession';
 
 import Sidebar from '../components/sidebar';
 import Content from "../components/content";
@@ -14,9 +15,15 @@ import Profile from '../pages/profile';
 
 const AppRouter = () => {
 
+  //const { session } = useSession()
   const [isOpen, setIsOpen] = useState<boolean>(JSON.parse(localStorage.getItem('sidebar') || '{}'))
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  /*useEffect(() => {
+    setIsAuthenticated(session)
+    console.log(session)
+  }, [session])
+*/
   const toggle = () => {
     setIsOpen(!isOpen)
     localStorage.setItem('sidebar', JSON.stringify(!isOpen))
@@ -24,13 +31,7 @@ const AppRouter = () => {
 
   return (
     <BrowserRouter>
-      {
-        (!isAuthenticated)?
-          <Routes>
-            <Route path="*" element={ <Login/> } />
-          </Routes>
-        :
-        <div className="App wrapper">
+      <div className="App wrapper">
           <Sidebar toggle={ toggle } isOpen={ isOpen } />
           <Content toggle={ toggle } isOpen={ isOpen } children={
             <Routes>
@@ -45,7 +46,6 @@ const AppRouter = () => {
             </Routes>
            }/>
         </div>
-      }
     </BrowserRouter>
   )
 }

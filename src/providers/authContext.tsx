@@ -1,10 +1,11 @@
-import { useState, createContext, Dispatch, SetStateAction } from 'react';
-
-import Login from '../pages/login';
+import { useState, useEffect, createContext, Dispatch, SetStateAction } from 'react'
+import { useLocalStorage } from '../hooks/useLocalStorage'
+import Login from '../pages/login'
+import Loader from '../pages/loader'
 
 interface IAuthContext {
-  session: string | null
-  setSession: Dispatch<SetStateAction<string | null>>
+  session: any | null
+  setSession: Dispatch<SetStateAction<any | null>>
 }
 
 export const AuthContext = createContext<IAuthContext>({
@@ -13,12 +14,22 @@ export const AuthContext = createContext<IAuthContext>({
 })
 
 export const AuthProvider = ({ children }: { children: any }) => {
+  const { getItem } = useLocalStorage()
+  const [session, setSession] = useState<any | null>(null)
+  const [loading, setLoading] = useState<boolean>(true)
 
-  const [session, setSession] = useState<string | null>(null);
+  useEffect(() => {
+    const _session = JSON.parse(getItem('session') || '{}')
+    if(_session.token){
+      setSession(_session)
+    }
+    setLoading(false)
+  }, [])
+
 
   return (
     <AuthContext.Provider value={{ session, setSession }}>
-        { session? children : <Login />}
-      </AuthContext.Provider>
+        { loading? <Loader/> : ((session?.token)? children : <Login />)}
+    </AuthContext.Provider>
   )
 }

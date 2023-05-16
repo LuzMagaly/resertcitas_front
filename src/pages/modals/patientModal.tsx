@@ -1,5 +1,6 @@
-import { Modal, Button, Form } from "react-bootstrap"
+import { Modal, Button, Accordion } from "react-bootstrap"
 import UserForm from "../forms/userForm"
+import PatientForm from "../forms/patientForm"
 
 const PatientModal = ({ show, handleClose }: { show: boolean, handleClose: any }) => {
   return (
@@ -9,15 +10,28 @@ const PatientModal = ({ show, handleClose }: { show: boolean, handleClose: any }
         </Modal.Header>
         <Modal.Body>
 
-        <UserForm/>
+        <Accordion defaultActiveKey="0" flush>
+          <Accordion.Item eventKey="0">
+            <Accordion.Header>Datos generales</Accordion.Header>
+            <Accordion.Body style={{ backgroundColor: 'white' }}>
+              <UserForm/>
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="1">
+            <Accordion.Header>Datos clínicos</Accordion.Header>
+            <Accordion.Body style={{ backgroundColor: 'white' }}>
+              <PatientForm/>
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
 
         </Modal.Body>
         <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-            Close
+            <Button variant="success" onClick={handleClose}>
+              Guardar
             </Button>
-            <Button variant="primary" onClick={handleClose}>
-            Save Changes
+            <Button variant="danger" onClick={handleClose}>
+              Salir
             </Button>
         </Modal.Footer>
     </Modal>

@@ -30,7 +30,7 @@ a:focus {
 .sidebar {
   min-width: 250px;
   max-width: 250px;
-  background: #354052;
+  background: #130A36;
   color: #adb5bd;
   margin-left: -250px;
   transition: all 0.5s;
@@ -43,7 +43,7 @@ a:focus {
 
 
 .sidebar-header {
-  background: #313b4c;
+  background: #130A36;
   color: #adb5bd;
 }
 
@@ -59,7 +59,7 @@ a:focus {
 
 .collapse.show, 
 .collapsing {
-  background: #313b4c;
+  background: #130A36;
 }
 
 .nav-item {
@@ -81,16 +81,16 @@ a:focus {
 
 .nav-item.open {
   color: #e9ecef;
-  background: #313b4c;
+  background: #130A36;
 }
 
 .nav-item.active {
   color: #e9ecef;
-  background: #2d3646 !important;
+  background: #322077 !important;
 }
 
 .nav-item:hover {
-  background: #313b4c;
+  background: #322077;
   color: #fff;
   transition: .2s;
 }
@@ -129,13 +129,13 @@ li a.dropdown-toggle::after {
   body {
     overflow:  hidden;
   }
-  
+
   .content.is-open {
     /*margin-left: 100%;*/
     display: none;
     transition: all 0.5s;
   }
-  
+
   .sidebar.is-open {
     min-width: 100%;
     max-width: 100%;
@@ -143,17 +143,15 @@ li a.dropdown-toggle::after {
     transition: all 0.5s, height 0s;
     height: 100vh !important;
   }
-  
+
   .sidebar.is-open > .sidebar-header button {
     display: block;
   }
-  
+
   li a.dropdown-toggle::after {
     display: inline-block;
     position: relative;
     left: 68%;
   }
-  
+
 }
-
-

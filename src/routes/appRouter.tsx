@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import { useSession } from '../hooks/useSession';
 
 import Sidebar from '../components/sidebar';
 import Content from "../components/content";
@@ -10,20 +9,12 @@ import Error from '../pages/error';
 import Appointment from '../pages/appointment';
 import Doctor from '../pages/doctor';
 import Patient from '../pages/patient';
-import Login from '../pages/login';
 import Profile from '../pages/profile';
 
 const AppRouter = () => {
 
-  //const { session } = useSession()
   const [isOpen, setIsOpen] = useState<boolean>(JSON.parse(localStorage.getItem('sidebar') || '{}'))
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  /*useEffect(() => {
-    setIsAuthenticated(session)
-    console.log(session)
-  }, [session])
-*/
   const toggle = () => {
     setIsOpen(!isOpen)
     localStorage.setItem('sidebar', JSON.stringify(!isOpen))

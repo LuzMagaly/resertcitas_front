@@ -7,13 +7,10 @@ import Form from 'react-bootstrap/Form'
 import Stack from 'react-bootstrap/Stack'
 import { useState, useContext } from 'react'
 import { Authenticate } from '../services/authService'
-//import { useSession } from "../hooks/useSession"
 import { AuthContext } from '../providers/authContext'
 
-
 const Login = () => {
-  //const { login } = useSession();
-  const { session, setSession } = useContext(AuthContext);
+  const { setSession } = useContext(AuthContext);
 
   const [user, setUser] = useState('')
   const [pass, setPass] = useState('')
@@ -48,10 +45,9 @@ const Login = () => {
       return
     }
 
-    setSession('login')
+    console.log('setting user')
 
-    //const { user, setUser } = useContext(AuthContext);
-    //login(resultUser)
+    setSession(resultUser)
   }
 
   const handleOnChangeUser = (value: string) => {

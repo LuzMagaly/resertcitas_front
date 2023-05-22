@@ -10,6 +10,8 @@ import Appointment from '../pages/appointment';
 import Doctor from '../pages/doctor';
 import Patient from '../pages/patient';
 import Profile from '../pages/profile';
+import Schedules from '../pages/schedules';
+import Timetable from '../pages/timetable';
 
 const AppRouter = () => {
 
@@ -31,8 +33,8 @@ const AppRouter = () => {
               <Route path="/doctor" element={ <Doctor/> } />
               <Route path="/patient" element={ <Patient/> } />
               <Route path="/profile" element={ <Profile/> } />
-              <Route path="/schedules" element={ <Profile/> } />
-              <Route path="/timetable" element={ <Profile/> } />
+              <Route path="/schedules" element={ <Schedules/> } />
+              <Route path="/timetable" element={ <Timetable/> } />
               <Route path="*" element={ <Error/> } />
             </Routes>
            }/>

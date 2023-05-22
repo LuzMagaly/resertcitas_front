@@ -1,10 +1,4 @@
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Image from "react-bootstrap/Image"
-import Button from 'react-bootstrap/Button'
-import Form from 'react-bootstrap/Form'
-import Stack from 'react-bootstrap/Stack'
+import { Container, Row, Col, Image, Button, Form, Stack } from 'react-bootstrap'
 import { useState, useContext } from 'react'
 import { Authenticate } from '../services/authService'
 import { AuthContext } from '../providers/authContext'

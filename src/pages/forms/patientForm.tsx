@@ -3,6 +3,29 @@ import { Col, Form, Row, Image, Button } from 'react-bootstrap'
 const PatientForm = () => {
   return (
     <Form>
+        <Row>
+            <Col sm="6">
+                <Form.Group className="mb-3">
+                    <Form.Label>Tiene alergias</Form.Label>
+                    <Form.Select aria-label="Default select example">
+                        <option>Seleccionar</option>
+                        <option value="Si">Si</option>
+                        <option value="No">No</option>
+                    </Form.Select>
+                </Form.Group>
+            </Col>
+            <Col sm="6">
+                <Form.Group className="mb-3">
+                    <Form.Label>Donación de órganos</Form.Label>
+                    <Form.Select aria-label="Default select example">
+                        <option>Seleccionar</option>
+                        <option value="Si">Si</option>
+                        <option value="No">No</option>
+                    </Form.Select>
+                </Form.Group>
+            </Col>
+        </Row>
+
         <Form.Group className="mb-3">
             <Form.Label>Alergias</Form.Label>
             <Form.Control type="text" placeholder="Escriba todas sus alergias" />
@@ -14,10 +37,10 @@ const PatientForm = () => {
                     <Form.Label>Tipo de sangre</Form.Label>
                     <Form.Select aria-label="Default select example">
                         <option>Seleccionar</option>
-                        <option value="A">Masculino</option>
-                        <option value="B">Femenino</option>
-                        <option value="AB">Femenino</option>
-                        <option value="O">Femenino</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="AB">AB</option>
+                        <option value="O">O</option>
                     </Form.Select>
                 </Form.Group>
             </Col>
@@ -26,24 +49,9 @@ const PatientForm = () => {
                     <Form.Label>Factor RH</Form.Label>
                     <Form.Select aria-label="Default select example">
                         <option>Seleccionar</option>
-                        <option value="+">Masculino</option>
-                        <option value="-">Femenino</option>
+                        <option value="+">+</option>
+                        <option value="-">-</option>
                     </Form.Select>
-                </Form.Group>
-            </Col>
-        </Row>
-
-        <Row>
-            <Col sm="6">
-                <Form.Group className="mb-3">
-                    <Form.Label>Seguro</Form.Label>
-                    <Form.Control type="text" placeholder="Ingrese el nombre de un seguro" />
-                </Form.Group>
-            </Col>
-            <Col sm="6">
-                <Form.Group className="mb-3">
-                    <Form.Label>Código de seguro</Form.Label>
-                    <Form.Control type="text" placeholder="Ingrese su código de seguro" />
                 </Form.Group>
             </Col>
         </Row>
@@ -64,25 +72,6 @@ const PatientForm = () => {
                 <Form.Group className="mb-3">
                     <Form.Label>Numero de emergencia 2</Form.Label>
                     <Form.Control type="text" placeholder="Ingrese un número de algún familiar" />
-                </Form.Group>
-            </Col>
-        </Row>
-
-        <Row>
-            <Col sm="6">
-                <Form.Group className="mb-3">
-                    <Form.Label>Numero de emergencia 3</Form.Label>
-                    <Form.Control type="text" placeholder="Ingrese un número de algún familiar" />
-                </Form.Group>
-            </Col>
-            <Col sm="6">
-                <Form.Group className="mb-3">
-                    <Form.Label>Donación de órganos</Form.Label>
-                    <Form.Select aria-label="Default select example">
-                        <option>Seleccionar</option>
-                        <option value="+">Si</option>
-                        <option value="-">No</option>
-                    </Form.Select>
                 </Form.Group>
             </Col>
         </Row>

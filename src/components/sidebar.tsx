@@ -24,61 +24,61 @@ const Sidebar = ({ toggle, isOpen }: { toggle: any, isOpen: any }) => {
         <Nav className="flex-column pt-2">
           <p style={{paddingLeft: '15px'}}>Heading</p>
 
-          <Nav.Item className={ location.pathname === '/'? 'active' : '' }>
-            <Link to="/" className="nav-item">
-              <FontAwesomeIcon icon={faHome} style={{paddingRight: '10px'}}/>
-              Inicio
-            </Link>
-          </Nav.Item>
+          <Link to="/">
+            <Nav.Item className={ location.pathname === '/'? 'active' : '' } style={{ padding: '7px 0px 7px 20px' }}>
+                <FontAwesomeIcon icon={faHome} style={{paddingRight: '10px'}}/>
+                Inicio
+            </Nav.Item>
+          </Link>
 
-          <Nav.Item className={ location.pathname === '/profile'? 'active' : '' }>
-            <Link to="/profile" className="nav-item">
-              <FontAwesomeIcon icon={ faUserCircle } style={{paddingRight: '10px'}}/>
-              Perfil
-            </Link>
-          </Nav.Item>
+          <Link to="/profile">
+            <Nav.Item className={ location.pathname === '/profile'? 'active' : '' } style={{ padding: '7px 0px 7px 20px' }}>
+                <FontAwesomeIcon icon={ faUserCircle } style={{paddingRight: '10px'}}/>
+                Mi Perfil
+            </Nav.Item>
+          </Link>
 
-          <Nav.Item className={ location.pathname === '/patient'? 'active' : '' }>
-            <Link to="/patient" className="nav-item">
-              <FontAwesomeIcon icon={ faWheelchair } style={{paddingRight: '10px'}}/>
-              Pacientes
-            </Link>
-          </Nav.Item>
+          <Link to="/patient">
+            <Nav.Item className={ location.pathname === '/patient'? 'active' : '' } style={{ padding: '7px 0px 7px 20px' }}>
+                <FontAwesomeIcon icon={ faWheelchair } style={{paddingRight: '10px'}}/>
+                Pacientes
+            </Nav.Item>
+          </Link>
 
-          <Nav.Item className={ location.pathname === '/doctor'? 'active' : '' }>
-            <Link to="/doctor" className="nav-item">
-              <FontAwesomeIcon icon={ faUserDoctor } style={{paddingRight: '10px'}}/>
-              Médicos
-            </Link>
-          </Nav.Item>
+          <Link to="/doctor">
+            <Nav.Item className={ location.pathname === '/doctor'? 'active' : '' } style={{ padding: '7px 0px 7px 20px' }}>
+                <FontAwesomeIcon icon={ faUserDoctor } style={{paddingRight: '10px'}}/>
+                Médicos
+            </Nav.Item>
+          </Link>
 
-          <Nav.Item className={ location.pathname === '/schedules'? 'active' : '' }>
-            <Link to="/schedules" className="nav-item">
-              <FontAwesomeIcon icon={ faCalendarWeek } style={{paddingRight: '10px'}}/>
-              Horarios
-            </Link>
-          </Nav.Item>
+          <Link to="/schedules">
+            <Nav.Item className={ location.pathname === '/schedules'? 'active' : '' } style={{ padding: '7px 0px 7px 20px' }}>
+                <FontAwesomeIcon icon={ faCalendarWeek } style={{paddingRight: '10px'}}/>
+                Mi Horario
+            </Nav.Item>
+          </Link>
 
-          <Nav.Item className={ location.pathname === '/timetable'? 'active' : '' }>
-            <Link to="/timetable" className="nav-item">
-              <FontAwesomeIcon icon={ faClock } style={{paddingRight: '10px'}}/>
-              Agenda
-            </Link>
-          </Nav.Item>
+          <Link to="/timetable">
+            <Nav.Item className={ location.pathname === '/timetable'? 'active' : '' } style={{ padding: '7px 0px 7px 20px' }}>
+                <FontAwesomeIcon icon={ faClock } style={{paddingRight: '10px'}}/>
+                Agenda
+            </Nav.Item>
+          </Link>
 
-          <Nav.Item className={ location.pathname === '/appointment'? 'active' : '' }>
-            <Link to="/appointment" className="nav-item">
-              <FontAwesomeIcon icon={ faClipboardList } style={{paddingRight: '10px'}}/>
-              Citas
-            </Link>
-          </Nav.Item>
+          <Link to="/appointment">
+            <Nav.Item className={ location.pathname === '/appointment'? 'active' : '' } style={{ padding: '7px 0px 7px 20px' }}>
+                <FontAwesomeIcon icon={ faClipboardList } style={{paddingRight: '10px'}}/>
+                Citas
+            </Nav.Item>
+          </Link>
 
-          <Nav.Item className={ location.pathname === '/payments'? 'active' : '' }>
-            <Link to="/payments" className="nav-item">
-              <FontAwesomeIcon icon={ faCoins } style={{paddingRight: '10px'}}/>
-              Pagos
-            </Link>
-          </Nav.Item>
+          <Link to="/payments">
+            <Nav.Item className={ location.pathname === '/payments'? 'active' : '' } style={{ padding: '7px 0px 7px 20px' }}>
+                <FontAwesomeIcon icon={ faCoins } style={{paddingRight: '10px'}}/>
+                Pagos
+            </Nav.Item>
+          </Link>
 
         </Nav>
       </div>

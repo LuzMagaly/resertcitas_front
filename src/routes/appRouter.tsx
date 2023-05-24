@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 import Sidebar from '../components/sidebar';
@@ -20,7 +20,7 @@ const AppRouter = () => {
   const toggle = () => {
     setIsOpen(!isOpen)
     localStorage.setItem('sidebar', JSON.stringify(!isOpen))
-  };
+  }
 
   return (
     <BrowserRouter>

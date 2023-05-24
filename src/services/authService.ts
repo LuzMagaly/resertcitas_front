@@ -1,31 +1,21 @@
 import axios from "axios"
+import { EncryptRSA } from '../hooks/useEncrypt'
 import { useLocalStorage } from "../hooks/useLocalStorage"
 import { url } from "../server/api"
 
-export const Authenticate = async (username: string, password: string) => {
+export const Authenticate = async (username: string, password: string, keepSessionOpen: boolean) => {
     const { setItem } = useLocalStorage()
 
+    const credentialsEncrypt = EncryptRSA(username + '|' + password)
     const result = await axios.post(url + '/auth/login', {
-      Credentials: 'aaa|123'
+      Credentials: credentialsEncrypt,
+      KeepSessionOpen: keepSessionOpen
     })
 
-    console.log(result)
-
-
-
-    console.log('authenticating..')
-    if(username == 'jean' && password == '1234'){
-      const result =  {
-        id: '1',
-        email: 'j.flores.es@hotmail.com',
-        name: 'Jean',
-        lastname: 'Flores',
-        token: '12346578912345678912',
-        photo: null
-      }
-
-      setItem('session', JSON.stringify(result))
-      return result
+    let session = null
+    if(result && result.data && result.data.Sesiones && result.data.Sesiones.length > 0 && result.data.Sesiones[0] && result.data.Sesiones[0].Token){
+      session = result.data
+      setItem('session', JSON.stringify(session))
     }
-    return null
+    return session
 }

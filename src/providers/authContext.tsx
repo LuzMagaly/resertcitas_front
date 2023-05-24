@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
 
   useEffect(() => {
     const _session = JSON.parse(getItem('session') || '{}')
-    if(_session.token){
+    if(_session?.Sesiones[0].Token){
       setSession(_session)
     }
     setLoading(false)
@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
 
   return (
     <AuthContext.Provider value={{ session, setSession }}>
-        { loading? <Loader/> : ((session?.token)? children : <Login />)}
+        { loading? <Loader/> : ((session?.Sesiones[0].Token)? children : <Login />)}
     </AuthContext.Provider>
   )
 }

@@ -63,7 +63,6 @@ a:focus {
 }
 
 .nav-item {
-  /*color: #ced4da;*/
   color: #adb5bd;
   font-weight: 300;
   padding-left: 10px;
@@ -120,9 +119,16 @@ li a.dropdown-toggle::after {
     CONTENT STYLE
 ----------------------------------------------------- */
 .content {
+  transition: all 0.5s;
   padding: 20px;
   margin-left: 0;
   height: 100vh;
+  max-width: 100vw;
+}
+
+.content.is-open {
+  transition: all 0.5s;
+  max-width: calc(100vw - 250px);
 }
 
 @media only screen and (max-width: 575.98px) {
@@ -131,7 +137,6 @@ li a.dropdown-toggle::after {
   }
 
   .content.is-open {
-    /*margin-left: 100%;*/
     display: none;
     transition: all 0.5s;
   }

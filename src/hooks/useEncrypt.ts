@@ -1,4 +1,48 @@
-export const EncryptRSA = (text: string): string => {
-    //Encript Text using RSA (public key)
-    return text;
+import { JSEncrypt } from "jsencrypt"
+
+export const privateKey = `
+-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEAnbDgPENcUA7AIrCDHyx2Qwz5iBdW8Ci7QfeC+6DJlSW+ddW0
+JepITOrsbFP6Wolzh2y8FNBP5crIvyM0njjE4js/IdlMWBiWGGwU0/lGmAzP5R3t
+l+Vp6cW6t2wMH71GJO1huyZnYBzcFiy+IVGdoIOzH3k7uuDQy3SUsNDpu9iowgJa
+8LjxMaxLJjbc1VnTa1v/VNQIHX4rhKvKUFrfdCv1/CT3C3Vcf6Gmf/JQ1kvzxTn7
+bPXu1LBkIdab0Ujx87x71ZitsdtyYuW49e/khqu24x+4U1Cjz1+apmyoqlgSRZPY
+DMicKpvCcPiJU9PseVWp2unltkyFd1Jb6Rl9KwIDAQABAoIBAEfbCvr6+Ow0JIJK
+K52/bW5VUbmdZQzPirDfH+0YkfLoPZdFV681SFfgbvZX+Atceev6dOQJHndIRdyv
+JrF4jeLG+5gphBvarD6ZtY34F55+rBcr4ZHnRLF1XAVr80RdQ8Lc9r1InS+TRwjF
+v6fAIJM9oBhV7o1UF2C2kXDW6cMiGkRNH2fGHIAOu0d+b7ptZRhii4tkrWfKO2ZW
+Ql7HxGZipxMtOpcdkdwkv8ehHfVxcSSIgMrCaJa3NY3Pb5ITPMKuR+lB0wYyRsVA
+G/eD3F1pF89sXTs9HV+9HVkRgJQD6hLSn0bDFBPo7vIQt6euIH3jZOoWo/EX2PXT
+paPh4qECgYEAv1/Q/GL1CWhcNY2t5fy+Y862YWhFe/SuVNLHkeTqaaAvW5nnTnVS
+5q/bGVLakNOXNmXyL/HyICfa2st7G0kufKY9VS3XeZ4rede+rc/LCiT8MLq0QEaj
+Mm4LK4P4g0Gskmg0cVYJR5rqwyDd1xpS+aMltNKIcIPkIzxToQ2Lo+ECgYEA0vEn
+mFlvbmaP0jK8lb+YqInUV00m/bjEFZgE0J8GxTcWN7EgDCJSKlxA+3S9wtxAWRw/
+cDVmx9ILSXknEx5YAk42TW+sJbjrwBcXuRFbhi+gue9GbTIw/jZL+g1R48qwvIVD
+tjOsXYp5m7/fkQzxOSn7n+5WZAHixll9fl73wosCgYEAvb0xBdrTGYW3znzvClSB
+K5Gab48jPRfF9GGa7oJpC1p/ObGojLhz/jYi48Oq4eZ3SL7g1TprlggNy9ns74uq
+JHnp21b9CR6R+la2PbwEkcVDqMijyAqA6ZIDTxykOvbVM79PJ4Nm5fCpi9c9O3Rl
+Cg8AZnxKPEv32BuKyuYUKeECgYAniPEt2Z1L6McN01qLCnTXKbX1gs1LAmUl0u8c
+FqITNmbgmz7xZ0FVFSNMva2PJu6chPHS2v9fdhuNcrqDF83Q6M2+p65xB36P6wQU
+OI+Zz7VlA9aEQsLx8kU9IV/2vJdxTdzJ+ldU1M5EBasmKXHQj/DMIcRpS/0vxbgC
+hlQTTwKBgE9+PeiZOXCP+DZzO4hCwdOg1lnFgYalCGeVPaWhtNzOQpVvW8WSi5+u
+AonyEEoCOMkSgNhZTPFI5zSMGq51EheXdS036eI39SgDsVxfLKEpt4rG1FZtAcYc
+DRtVd+mSnygOHRKEDbmSeTn8q8/eQBIxwy+TJToCxNmQihB/4Aql
+-----END RSA PRIVATE KEY-----
+`
+
+export const publicKey = `
+-----BEGIN RSA PUBLIC KEY-----
+MIIBCgKCAQEAnbDgPENcUA7AIrCDHyx2Qwz5iBdW8Ci7QfeC+6DJlSW+ddW0JepI
+TOrsbFP6Wolzh2y8FNBP5crIvyM0njjE4js/IdlMWBiWGGwU0/lGmAzP5R3tl+Vp
+6cW6t2wMH71GJO1huyZnYBzcFiy+IVGdoIOzH3k7uuDQy3SUsNDpu9iowgJa8Ljx
+MaxLJjbc1VnTa1v/VNQIHX4rhKvKUFrfdCv1/CT3C3Vcf6Gmf/JQ1kvzxTn7bPXu
+1LBkIdab0Ujx87x71ZitsdtyYuW49e/khqu24x+4U1Cjz1+apmyoqlgSRZPYDMic
+KpvCcPiJU9PseVWp2unltkyFd1Jb6Rl9KwIDAQAB
+-----END RSA PUBLIC KEY-----
+`
+
+export const EncryptRSA = (text: string) => {
+  const jsEncrypt  = new JSEncrypt()
+  jsEncrypt.setPublicKey(publicKey)
+  return jsEncrypt.encrypt(text)
 }

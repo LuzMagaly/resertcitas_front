@@ -1,6 +1,21 @@
+import { useEffect, useState } from 'react'
 import { Col, Form, Row, Image, Button } from 'react-bootstrap'
+import { specialtyService } from '../../services/specialtyService'
 
 const DoctorForm = () => {
+
+    const [specialties, setSpecialties] = useState<[]>([])
+
+    useEffect(() => {
+        loadSpecialty()
+    }, [])
+
+    const loadSpecialty = async () => {
+        const result: any = await specialtyService() || []
+        console.log(result)
+        setSpecialties(result)
+    }
+
   return (
     <Form>
       <Row>
@@ -15,6 +30,11 @@ const DoctorForm = () => {
                   <Form.Label>Especialidad</Form.Label>
                   <Form.Select aria-label="Default select example">
                       <option>Seleccionar</option>
+                      {
+                        specialties.map((item: any, index: number) =>
+                            <option key={ index } value={ item.Id }>{ item.Nombre }</option>
+                        )
+                      }
                   </Form.Select>
               </Form.Group>
           </Col>

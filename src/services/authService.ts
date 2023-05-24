@@ -1,21 +1,22 @@
-import axios from "axios"
 import { EncryptRSA } from '../hooks/useEncrypt'
 import { useLocalStorage } from "../hooks/useLocalStorage"
-import { url } from "../server/api"
+import { invoke } from "../server/api"
 
 export const Authenticate = async (username: string, password: string, keepSessionOpen: boolean) => {
-    const { setItem } = useLocalStorage()
+    const { setItem, keySession } = useLocalStorage()
 
     const credentialsEncrypt = EncryptRSA(username + '|' + password)
-    const result = await axios.post(url + '/auth/login', {
+
+    const data = {
       Credentials: credentialsEncrypt,
       KeepSessionOpen: keepSessionOpen
-    })
+    }
+    const result = await invoke('/auth/login', data, false)
 
     let session = null
     if(result && result.data && result.data.Sesiones && result.data.Sesiones.length > 0 && result.data.Sesiones[0] && result.data.Sesiones[0].Token){
       session = result.data
-      setItem('session', JSON.stringify(session))
+      setItem(keySession, session)
     }
     return session
 }

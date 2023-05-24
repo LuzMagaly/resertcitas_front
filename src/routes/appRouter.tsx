@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 import Sidebar from '../components/sidebar';
@@ -12,14 +12,17 @@ import Patient from '../pages/patient';
 import Profile from '../pages/profile';
 import Schedules from '../pages/schedules';
 import Timetable from '../pages/timetable';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const AppRouter = () => {
 
-  const [isOpen, setIsOpen] = useState<boolean>(JSON.parse(localStorage.getItem('sidebar') || '{}'))
+  const { getItem, setItem, keySidebar } = useLocalStorage()
+
+  const [isOpen, setIsOpen] = useState<boolean>(getItem(keySidebar) == '1'? true : false)
 
   const toggle = () => {
     setIsOpen(!isOpen)
-    localStorage.setItem('sidebar', JSON.stringify(!isOpen))
+    setItem(keySidebar, !isOpen? '1' : '0')
   }
 
   return (

@@ -14,13 +14,14 @@ export const AuthContext = createContext<IAuthContext>({
 })
 
 export const AuthProvider = ({ children }: { children: any }) => {
-  const { getItem } = useLocalStorage()
+  const { getItem, keySession } = useLocalStorage()
   const [session, setSession] = useState<any | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
-    const _session = JSON.parse(getItem('session') || '{}')
-    if(_session?.Sesiones[0].Token){
+    const _session = (getItem(keySession))
+    console.log(_session)
+    if(_session && _session.Sesiones && _session?.Sesiones[0].Token){
       setSession(_session)
     }
     setLoading(false)

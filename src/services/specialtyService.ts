@@ -1,9 +1,9 @@
 import axios from "axios"
-import { url } from "../server/api"
+import { invoke } from "../server/api"
 
 export const specialtyService = async () => {
 
-    const result = await axios.post(url + '/specialty/getAll')
+    const result = await invoke('/specialty/getAll', {})
     if(result && result.data){
         return result.data
     }

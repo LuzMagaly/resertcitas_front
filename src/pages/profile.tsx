@@ -1,5 +1,5 @@
 import { Fragment, useState } from 'react'
-import { Table, Container, Button } from 'react-bootstrap'
+import { Container, Button } from 'react-bootstrap'
 import UserForm from './forms/userForm'
 
 const Profile = () => {
@@ -11,9 +11,8 @@ const Profile = () => {
             <h1>Mi perfil</h1>
           </div>
           <div className="p-2 bd-highlight">
-          <Button variant="success">Guardar</Button>{' '}
-          <Button variant="primary">Cambiar contraseña</Button>{' '}
-          <Button variant="danger">Cancelar</Button>
+          <Button variant="primary">Confirmar Cambios</Button>{' '}
+          <Button variant="secondary">Cambiar contraseña</Button>{' '}
           </div>
         </div>
         <hr/>

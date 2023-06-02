@@ -20,7 +20,6 @@ export const AuthProvider = ({ children }: { children: any }) => {
 
   useEffect(() => {
     const _session = (getItem(keySession))
-    console.log(_session)
     if(_session && _session.Sesiones && _session?.Sesiones[0].Token){
       setSession(_session)
     }

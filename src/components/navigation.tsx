@@ -35,7 +35,7 @@ const Navigation = ({ toggle }: { toggle: any }) => {
             <Link to="profile" className="text-muted">
                   <div className="d-inline-flex">
                     <div className="d-flex flex-column" style={{ paddingRight: '10px' }}>
-                      <Image style={{ height: '40px', width: '40px' }} className="rounded rounded-circle" src={ session.Foto } />
+                      <Image style={{ height: '40px', width: '40px' }} className="rounded rounded-circle" src={ 'https://static.vecteezy.com/system/resources/previews/008/442/086/original/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg' } />
                     </div>
                     <div className="d-flex flex-column" style={{ paddingRight: '15px' }}>
                       <div className="text-dark">{ `${session.Nombres} ${session.Apellido_Paterno} ${session.Apellido_Materno}` }</div>

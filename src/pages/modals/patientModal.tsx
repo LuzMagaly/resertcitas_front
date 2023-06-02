@@ -14,7 +14,7 @@ const PatientModal = ({ show, handleClose }: { show: boolean, handleClose: any }
           <Accordion.Item eventKey="0">
             <Accordion.Header>Datos generales</Accordion.Header>
             <Accordion.Body style={{ backgroundColor: 'white' }}>
-              <UserForm/>
+              {/* <UserForm/> */}
             </Accordion.Body>
           </Accordion.Item>
           <Accordion.Item eventKey="1">

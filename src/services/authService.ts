@@ -7,16 +7,16 @@ export const Authenticate = async (username: string, password: string, keepSessi
 
     const credentialsEncrypt = EncryptRSA(username + '|' + password)
 
-    const data = {
+    const payload = {
       Credentials: credentialsEncrypt,
       KeepSessionOpen: keepSessionOpen
     }
-    const result = await invoke('/auth/login', data, false)
+    const result = await invoke('/auth/login', payload, false)
 
-    let session = null
+    let data = null
     if(result && result.data && result.data.Sesiones && result.data.Sesiones.length > 0 && result.data.Sesiones[0] && result.data.Sesiones[0].Token){
-      session = result.data
-      setItem(keySession, session)
+      data = result.data
+      setItem(keySession, data)
     }
-    return session
+    return data
 }

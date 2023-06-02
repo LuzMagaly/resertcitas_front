@@ -9,7 +9,6 @@ export const useLocalStorage = () => {
 
   const getItem = (key: string) => {
     const value = localStorage.getItem(key)
-    console.log(value)
     if(value && value != ''){
       return JSON.parse(window.atob(value) || '{}')
     }

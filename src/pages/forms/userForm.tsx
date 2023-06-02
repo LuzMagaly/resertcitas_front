@@ -1,8 +1,185 @@
+import { useState, useEffect, useContext } from 'react'
 import { Col, Form, Row, Image, Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
+import { AuthContext } from '../../providers/authContext'
+import Confirm from "../../components/confirm"
+import { createUser } from '../../services/userService'
+import { updateUser } from '../../services/userService'
+import { updatePassword } from '../../services/userService'
 
-const UserForm = () => {
+const UserForm = ({ data }: { data: any }) => {
+
+    //#region [ VARIABLES ]
+        const { session } = useContext(AuthContext)
+        const [show, setShow] = useState(false)
+        const [statusRow, setStatusRow] = useState(0) //status: 0 is new, 1 is update
+
+        const [DNI, setDNI] = useState({ value: '', state: 0, message: '' })
+        const [Nombres, setNombres] = useState({ value: '', state: 0, message: '' })
+        const [Apellido_Paterno, setApellido_Paterno] = useState({ value: '', state: 0, message: '' })
+        const [Apellido_Materno, setApellido_Materno] = useState({ value: '', state: 0, message: '' })
+        const [Fecha_Nacimiento, setFecha_Nacimiento] = useState({ value: '', state: 0, message: '' })
+        const [Direccion, setDireccion] = useState({ value: '', state: 0, message: '' })
+        const [Telefono, setTelefono] = useState({ value: '', state: 0, message: '' })
+        const [Correo, setCorreo] = useState({ value: '', state: 0, message: '' })
+        const [Sexo, setSexo] = useState({ value: '', state: 0, message: '' })
+
+    //#endregion
+
+    //#region [ EFFECTS ]
+    useEffect(() => {
+      loadData()
+    }, [data])
+
+    //#endregion
+
+    //#region [ METHODS ]
+
+        const loadData = async () => {
+            console.log(data)
+            if(!data){
+                return
+            }
+            setStatusRow(1)
+            setDNI({ value: data.DNI, state: 0, message: '' })
+            setNombres({ value: data.Nombres, state: 0, message: '' })
+            setApellido_Paterno({ value: data.Apellido_Paterno, state: 0, message: '' })
+            setApellido_Materno({ value: data.Apellido_Materno, state: 0, message: '' })
+            setFecha_Nacimiento({ value: (new Date(data.Fecha_Nacimiento).toISOString().split('T')[0]), state: 0, message: '' })
+            setDireccion({ value: data.Direccion, state: 0, message: '' })
+            setTelefono({ value: data.Telefono, state: 0, message: '' })
+            setCorreo({ value: data.Correo, state: 0, message: '' })
+            setSexo({ value: data.Sexo, state: 0, message: '' })
+        }
+
+        const validateData = async() => {
+            //verify the form
+
+            console.log('saving...')
+            handleToggleConfirm()
+        }
+
+        const sendData = async() => {
+            console.log('saving')
+            const payload: any = {
+                Item: {
+                    Id_Rol: 1,
+                    DNI: DNI.value,
+                    Nombres: Nombres.value,
+                    Apellido_Paterno: Apellido_Paterno.value,
+                    Apellido_Materno: Apellido_Materno.value,
+                    Fecha_Nacimiento: Fecha_Nacimiento.value,
+                    Direccion: Direccion.value,
+                    Telefono: Telefono.value,
+                    Correo: Correo.value,
+                    Sexo: Sexo.value,
+                    Estado: 'ACTIVO',
+                    Foto: null
+                }
+            }
+            console.log(payload)
+            let result: any;
+            if(statusRow == 0){
+                payload.Item.Contrasenia = payload.DNI //default pass
+                payload.Item.Creado_Por = session.Id
+                result = await createUser(payload)
+            }
+            if (statusRow == 1){
+                payload.Item.Id = data.Id
+                payload.Item.Actualizado_Por = session.Id
+                result = await updateUser(payload)
+            }
+            console.log(result)
+            handleToggleConfirm()
+        }
+
+        const changePassword = async () => {
+            console.log('change')
+        }
+
+    //#endregion
+
+    //#region [ EVENTS ]
+
+        const handleToggleConfirm = () => {
+            setShow(!show)
+        }
+
+        const handleChangeDNI = (event: any) => {
+            const _value = event.target.value
+            if(!_value){
+                setDNI({ value: DNI.value, state: 2, message: 'Completa este campo' })
+            }
+            setDNI({ value: _value, state: 1, message: '' })
+        }
+
+        const handleChangeNombres = (event: any) => {
+            const _value = event.target.value
+            if(!_value){
+                setNombres({ value: Nombres.value, state: 2, message: 'Completa este campo' })
+            }
+            setNombres({ value: _value, state: 1, message: '' })
+        }
+
+        const handleChangeApellido_Paterno = (event: any) => {
+            const _value = event.target.value
+            if(!_value){
+                setApellido_Paterno({ value: Apellido_Paterno.value, state: 2, message: 'Completa este campo' })
+            }
+            setApellido_Paterno({ value: _value, state: 1, message: '' })
+        }
+
+        const handleChangeApellido_Materno = (event: any) => {
+            const _value = event.target.value
+            if(!_value){
+                setApellido_Materno({ value: Apellido_Materno.value, state: 2, message: 'Completa este campo' })
+            }
+            setApellido_Materno({ value: _value, state: 1, message: '' })
+        }
+
+        const handleChangeFecha_Nacimiento = (event: any) => {
+            const _value = event.target.value
+            if(!_value){
+                setFecha_Nacimiento({ value: Fecha_Nacimiento.value, state: 2, message: 'Completa este campo' })
+            }
+            setFecha_Nacimiento({ value: _value, state: 1, message: '' })
+        }
+
+        const handleChangeDireccion = (event: any) => {
+            const _value = event.target.value
+            if(!_value){
+                setDireccion({ value: Direccion.value, state: 2, message: 'Completa este campo' })
+            }
+            setDireccion({ value: _value, state: 1, message: '' })
+        }
+
+        const handleChangeTelefono = (event: any) => {
+            const _value = event.target.value
+            if(!_value){
+                setTelefono({ value: Telefono.value, state: 2, message: 'Completa este campo' })
+            }
+            setTelefono({ value: _value, state: 1, message: '' })
+        }
+
+        const handleChangeCorreo = (event: any) => {
+            const _value = event.target.value
+            if(!_value){
+                setCorreo({ value: Correo.value, state: 2, message: 'Completa este campo' })
+            }
+            setCorreo({ value: _value, state: 1, message: '' })
+        }
+
+        const handleChangeSexo = (event: any) => {
+            const _value = event.target.value
+            if(!_value){
+                setSexo({ value: Sexo.value, state: 2, message: 'Completa este campo' })
+            }
+            setSexo({ value: _value, state: 1, message: '' })
+        }
+
+    //#endregion
+
   return (
     <Form>
         <div className="mx-auto" style={{ height: '255px', width: '255px', maxHeight: '255px', maxWidth: '255px' }}>
@@ -24,13 +201,13 @@ const UserForm = () => {
             <Col sm="8">
                 <Form.Group className="mb-3" >
                     <Form.Label>Nombres</Form.Label>
-                    <Form.Control type="text" placeholder="Ingrese sus nombres completos" autoFocus />
+                    <Form.Control value={ Nombres.value } onChange={ handleChangeNombres } type="text" placeholder="Ingrese sus nombres completos" autoFocus />
                 </Form.Group>
             </Col>
             <Col sm="4">
                 <Form.Group className="mb-3">
                     <Form.Label>DNI</Form.Label>
-                    <Form.Control type="text" placeholder="XXXXXXXX" />
+                    <Form.Control value={ DNI.value } onChange={ handleChangeDNI } type="text" placeholder="XXXXXXXX" />
                 </Form.Group>
             </Col>
         </Row>
@@ -39,13 +216,13 @@ const UserForm = () => {
             <Col sm="6">
                 <Form.Group className="mb-3">
                     <Form.Label>Apellido paterno</Form.Label>
-                    <Form.Control type="text" placeholder="Ingrese su apellido paterno" />
+                    <Form.Control value={ Apellido_Paterno.value } onChange={ handleChangeApellido_Paterno } type="text" placeholder="Ingrese su apellido paterno" />
                 </Form.Group>
             </Col>
             <Col sm="6">
                 <Form.Group className="mb-3">
                     <Form.Label>Apellido materno</Form.Label>
-                    <Form.Control type="text" placeholder="Ingrese su apellido materno" />
+                    <Form.Control value={ Apellido_Materno.value } onChange={ handleChangeApellido_Materno } type="text" placeholder="Ingrese su apellido materno" />
                 </Form.Group>
             </Col>
         </Row>
@@ -54,30 +231,50 @@ const UserForm = () => {
             <Col sm="8">
                 <Form.Group className="mb-3">
                     <Form.Label>Fecha de nacimiento</Form.Label>
-                    <Form.Control type="date" placeholder="DD/MM/YYYY" />
+                    <Form.Control value={ Fecha_Nacimiento.value } onChange={ handleChangeFecha_Nacimiento } type="date" placeholder="DD/MM/YYYY" />
                 </Form.Group>
             </Col>
             <Col sm="4">
                 <Form.Group className="mb-3">
                     <Form.Label>Sexo</Form.Label>
-                    <Form.Select aria-label="Default select example">
+                    <Form.Select value={ Sexo.value } onChange={ handleChangeSexo } aria-label="Default select example">
                         <option>Seleccionar</option>
-                        <option value="1">Masculino</option>
-                        <option value="2">Femenino</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
                     </Form.Select>
+                </Form.Group>
+            </Col>
+        </Row>
+
+        <Row>
+            <Col sm="8">
+                <Form.Group className="mb-3">
+                    <Form.Label>Correo electrónico</Form.Label>
+                    <Form.Control value={ Correo.value } onChange={ handleChangeCorreo } type="email" placeholder="mi_email@email.com" />
+                </Form.Group>
+            </Col>
+            <Col sm="4">
+                <Form.Group className="mb-3">
+                    <Form.Label>Teléfono</Form.Label>
+                    <Form.Control value={ Telefono.value } onChange={ handleChangeTelefono } type="text" placeholder="xxx xxx xxx" />
                 </Form.Group>
             </Col>
         </Row>
 
         <Form.Group className="mb-3">
             <Form.Label>Dirección</Form.Label>
-            <Form.Control type="text" placeholder="Ingrese su dirección" />
+            <Form.Control value={ Direccion.value } onChange={ handleChangeDireccion } type="text" placeholder="Ingrese su dirección" />
         </Form.Group>
 
-        <Form.Group className="mb-3">
-            <Form.Label>Correo electrónico</Form.Label>
-            <Form.Control type="email" placeholder="mi_email@email.com" />
-        </Form.Group>
+        <br/>
+        <div className="mb-5 text-center">
+            <Button variant="primary" onClick={ validateData }>Confirmar Cambios</Button>{' '}
+            {
+                (statusRow == 1 && session.Id == data.Id) &&
+                <Button variant="secondary" onClick={ changePassword }>Cambiar contraseña</Button>
+            }
+        </div><br/>
+        <Confirm show={ show } handleClose={ handleToggleConfirm } action={ sendData } title='Confirmación de guardado' message='¿Está seguro que desea guardar los datos?'/>
     </Form>
   )
 }

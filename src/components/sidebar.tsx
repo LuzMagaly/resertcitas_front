@@ -73,13 +73,6 @@ const Sidebar = ({ toggle, isOpen }: { toggle: any, isOpen: any }) => {
             </Nav.Item>
           </Link>
 
-          <Link to="/payments">
-            <Nav.Item className={ location.pathname === '/payments'? 'active' : '' } style={{ padding: '7px 0px 7px 20px' }}>
-                <FontAwesomeIcon icon={ faCoins } style={{paddingRight: '10px'}}/>
-                Pagos
-            </Nav.Item>
-          </Link>
-
         </Nav>
       </div>
   )

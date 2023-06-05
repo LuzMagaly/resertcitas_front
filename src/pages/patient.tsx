@@ -1,6 +1,7 @@
 import { Fragment, useState } from 'react'
 import { Table, Container, Button } from 'react-bootstrap'
 import PatientModal from './modals/patientModal'
+import EditorUserModal from './modals/editorUserModal'
 
 const Patient = () => {
   const [show, setShow] = useState(false)
@@ -54,7 +55,9 @@ const Patient = () => {
         </Table>
       </Container>
 
-      <PatientModal show={ show } handleClose={ handleClose }/>
+      {
+        !!show && <EditorUserModal show={ show } handleClose={ handleClose } type={ 'paciente' }/>
+      }
     </Fragment>
   )
 }

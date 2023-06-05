@@ -11,7 +11,6 @@ const Admin = () => {
 
   const loadSpecialty = async () => {
     const result: any = await specialtyService() || []
-    console.log(result)
     setSpecialties(result)
 }
 

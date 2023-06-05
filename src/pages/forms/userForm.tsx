@@ -8,22 +8,22 @@ import { createUser } from '../../services/userService'
 import { updateUser } from '../../services/userService'
 import { updatePassword } from '../../services/userService'
 
-const UserForm = ({ data }: { data: any }) => {
+const UserForm = ({ data, onEventSave, callbackResponse }: { data: any, onEventSave: number, callbackResponse?: any }) => {
 
     //#region [ VARIABLES ]
         const { session } = useContext(AuthContext)
         const [show, setShow] = useState(false)
         const [statusRow, setStatusRow] = useState(0) //status: 0 is new, 1 is update
 
-        const [DNI, setDNI] = useState({ value: '', state: 0, message: '' })
-        const [Nombres, setNombres] = useState({ value: '', state: 0, message: '' })
-        const [Apellido_Paterno, setApellido_Paterno] = useState({ value: '', state: 0, message: '' })
-        const [Apellido_Materno, setApellido_Materno] = useState({ value: '', state: 0, message: '' })
-        const [Fecha_Nacimiento, setFecha_Nacimiento] = useState({ value: '', state: 0, message: '' })
-        const [Direccion, setDireccion] = useState({ value: '', state: 0, message: '' })
-        const [Telefono, setTelefono] = useState({ value: '', state: 0, message: '' })
-        const [Correo, setCorreo] = useState({ value: '', state: 0, message: '' })
-        const [Sexo, setSexo] = useState({ value: '', state: 0, message: '' })
+        const [DNI, setDNI] = useState<any>({ value: '', state: 0, message: '' })
+        const [Nombres, setNombres] = useState<any>({ value: '', state: 0, message: '' })
+        const [Apellido_Paterno, setApellido_Paterno] = useState<any>({ value: '', state: 0, message: '' })
+        const [Apellido_Materno, setApellido_Materno] = useState<any>({ value: '', state: 0, message: '' })
+        const [Fecha_Nacimiento, setFecha_Nacimiento] = useState<any>({ value: '', state: 0, message: '' })
+        const [Direccion, setDireccion] = useState<any>({ value: '', state: 0, message: '' })
+        const [Telefono, setTelefono] = useState<any>({ value: '', state: 0, message: '' })
+        const [Correo, setCorreo] = useState<any>({ value: '', state: 0, message: '' })
+        const [Sexo, setSexo] = useState<any>({ value: '', state: 0, message: '' })
 
     //#endregion
 
@@ -32,12 +32,17 @@ const UserForm = ({ data }: { data: any }) => {
       loadData()
     }, [data])
 
+    useEffect(() => {
+        if(onEventSave != 0){
+            saveUser()
+        }
+      }, [onEventSave])
+
     //#endregion
 
     //#region [ METHODS ]
 
         const loadData = async () => {
-            console.log(data)
             if(!data){
                 return
             }
@@ -53,15 +58,13 @@ const UserForm = ({ data }: { data: any }) => {
             setSexo({ value: data.Sexo, state: 0, message: '' })
         }
 
-        const validateData = async() => {
+        //default method to init
+        const saveUser = async() => {
             //verify the form
-
-            console.log('saving...')
             handleToggleConfirm()
         }
 
         const sendData = async() => {
-            console.log('saving')
             const payload: any = {
                 Item: {
                     Id_Rol: 1,
@@ -78,7 +81,6 @@ const UserForm = ({ data }: { data: any }) => {
                     Foto: null
                 }
             }
-            console.log(payload)
             let result: any;
             if(statusRow == 0){
                 payload.Item.Contrasenia = payload.DNI //default pass
@@ -90,12 +92,13 @@ const UserForm = ({ data }: { data: any }) => {
                 payload.Item.Actualizado_Por = session.Id
                 result = await updateUser(payload)
             }
-            console.log(result)
+            if(callbackResponse){
+                callbackResponse(result)
+            }
             handleToggleConfirm()
         }
 
         const changePassword = async () => {
-            console.log('change')
         }
 
     //#endregion
@@ -267,13 +270,13 @@ const UserForm = ({ data }: { data: any }) => {
         </Form.Group>
 
         <br/>
-        <div className="mb-5 text-center">
-            <Button variant="primary" onClick={ validateData }>Confirmar Cambios</Button>{' '}
+        {/* <div className="mb-5 text-center">
+            <Button variant="primary" onClick={ saveUser }>Confirmar Cambios</Button>{' '}
             {
                 (statusRow == 1 && session.Id == data.Id) &&
                 <Button variant="secondary" onClick={ changePassword }>Cambiar contraseña</Button>
             }
-        </div><br/>
+        </div><br/> */}
         <Confirm show={ show } handleClose={ handleToggleConfirm } action={ sendData } title='Confirmación de guardado' message='¿Está seguro que desea guardar los datos?'/>
     </Form>
   )

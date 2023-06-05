@@ -14,13 +14,13 @@ const DoctorModal = ({ show, handleClose }: { show: boolean, handleClose: any })
           <Accordion.Item eventKey="0">
             <Accordion.Header>Datos generales</Accordion.Header>
             <Accordion.Body style={{ backgroundColor: 'white' }}>
-              <UserForm data={null}/>
+              <UserForm data={ null } onEventSave={ 0 }/>
             </Accordion.Body>
           </Accordion.Item>
           <Accordion.Item eventKey="1">
             <Accordion.Header>Datos profesionales</Accordion.Header>
             <Accordion.Body style={{ backgroundColor: 'white' }}>
-              <DoctorForm/>
+              {/* <DoctorForm/> */}
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>

@@ -1,21 +1,66 @@
-import { useState, Fragment } from 'react'
+import { useState, Fragment, useEffect } from 'react'
 import { Modal, Button, Accordion } from "react-bootstrap"
 import UserForm from "../forms/userForm"
 import PatientForm from "../forms/patientForm"
 import DoctorForm from "../forms/doctorForm"
 import QuestionUserForm from "../forms/questionUserForm"
+import { getUserById } from '../../services/userService'
+import { getPatientByUser } from '../../services/patientService'
+import { getDoctorByUser } from '../../services/doctorService'
 
-const EditorUserModal = ({ show, handleClose, type }: { show: boolean, handleClose: any, type: string }) => {
-
+const EditorUserModal = ({ show, handleClose, type, userID = null }: { show: boolean, handleClose: any, type: string, userID?: number | null }) => {
   const [eventSave, setEventSave] = useState(0)
   const [eventSaveNext, setEventSaveNext] = useState(0)
-  const [userSelected, setUserSelected] = useState(0)
+  const [userSelected, setUserSelected] = useState(userID ? 1 : 0)
   const [dataUser, setDataUser] = useState<any>(undefined)
-  const [dataNext, setDataNext] = useState<any>(undefined)
+  const [dataNext, setDataNext] = useState<any>('')
+
+  useEffect(() => {
+    if(userID){
+      getPerson()
+    }
+  }, [])
 
   const selectUser = (typeSelect: number, data: any) => {
     setUserSelected(typeSelect)
     setDataUser(data)
+    if(type == 'médico'){
+      getDoctor(data.DNI)
+      return
+    }
+    if(type == 'paciente'){
+      getPatient(data.DNI)
+      return
+    }
+  }
+
+  const getPerson = async () => {
+    const result = await getUserById(userID as number)
+    setDataUser(result)
+    if(result){
+      if(type == 'médico'){
+        getDoctor(result.DNI)
+        return
+      }
+      if(type == 'paciente'){
+        getPatient(result.DNI)
+        return
+      }
+    }
+  }
+
+  const getPatient = async (dni: string) => {
+    const result = await getPatientByUser({ DNI: dni })
+    if(result && result.length && result.length > 0){
+      setDataNext(result[0])
+    }
+  }
+
+  const getDoctor = async (dni: string) => {
+    const result = await getDoctorByUser({ DNI: dni })
+    if(result && result.length && result.length > 0){
+      setDataNext(result[0])
+    }
   }
 
   const saveAll = () => {
@@ -27,7 +72,7 @@ const EditorUserModal = ({ show, handleClose, type }: { show: boolean, handleClo
     setEventSaveNext(eventSaveNext + 1)
   }
 
-  const callbackResponseNext = () => {
+  const callbackResponseNext = (result: any) => {
     handleClose()
   }
 

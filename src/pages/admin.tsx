@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from 'react'
 import { Table, Container, Button, Card, Col, Row, Image } from 'react-bootstrap'
-import { specialtyService } from '../services/specialtyService'
+import { getSpecialtyAll } from '../services/specialtyService'
 
 const Admin = () => {
   const [specialties, setSpecialties] = useState<[]>([])
@@ -10,7 +10,7 @@ const Admin = () => {
   }, [])
 
   const loadSpecialty = async () => {
-    const result: any = await specialtyService() || []
+    const result: any = await getSpecialtyAll() || []
     setSpecialties(result)
 }
 

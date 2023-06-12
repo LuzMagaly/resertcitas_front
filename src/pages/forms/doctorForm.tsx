@@ -1,7 +1,8 @@
 import { useEffect, useState, useContext } from 'react'
 import { Col, Form, Row } from 'react-bootstrap'
-import { specialtyService } from '../../services/specialtyService'
+import { getSpecialtyAll } from '../../services/specialtyService'
 import { AuthContext } from '../../providers/authContext'
+import { saveDoctor, updateDoctor } from '../../services/doctorService'
 
 const DoctorForm = ({ data, onEventSave, dataUser, callbackResponse }: { data: any, onEventSave: number, dataUser: any, callbackResponse?: any }) => {
 
@@ -39,7 +40,7 @@ const DoctorForm = ({ data, onEventSave, dataUser, callbackResponse }: { data: a
     //#region [ METHODS ]
 
         const loadSpecialty = async () => {
-            const result: any = await specialtyService() || []
+            const result: any = await getSpecialtyAll() || []
             setSpecialties(result)
         }
 
@@ -48,36 +49,40 @@ const DoctorForm = ({ data, onEventSave, dataUser, callbackResponse }: { data: a
                 return
             }
             setStatusRow(1)
-            setCmp({ value: data.CMP, state: 0, message: '' })
-            setEspecialidad({ value: data.Especialidad, state: 0, message: '' })
-            setGrado({ value: data.Grado, state: 0, message: '' })
+            setCmp({ value: data.Codigo, state: 0, message: '' })
+            setEspecialidad({ value: data.Especialidades.Id, state: 0, message: '' })
+            setGrado({ value: data.Grado_Instruccion, state: 0, message: '' })
         }
 
         //default method to init
         const save = async() => {
-            //verify the form
+            if(
+                Cmp.value == '' ||
+                Especialidad.value == 'Seleccionar' ||
+                Grado.value == ''
+            ){
+                return
+            }
             sendData()
         }
 
         const sendData = async() => {
             const payload: any = {
-                Item: {
-                    Id_Usuario: dataUser.Id,
-                    Codigo: Cmp.value,
-                    Id_Especialidad: Especialidad.value,
-                    Grado_Instruccion: Grado.value
-                }
+                Id_Usuario: dataUser.Id,
+                Codigo: Cmp.value,
+                Id_Especialidad: Especialidad.value,
+                Grado_Instruccion: Grado.value
             }
             console.log(payload)
             let result: any;
             if(statusRow == 0){
-                payload.Item.Creado_Por = session.Id
-                //result = await createDoctor(payload)
+                payload.Creado_Por = session.Id
+                result = await saveDoctor(payload)
             }
             if (statusRow == 1){
-                payload.Item.Id = data.Id
-                payload.Item.Actualizado_Por = session.Id
-                //result = await updateDoctor(payload)
+                payload.Id = data.Id
+                payload.Actualizado_Por = session.Id
+                result = await updateDoctor(payload)
             }
             if(callbackResponse){
                 callbackResponse(result)
@@ -122,13 +127,13 @@ const DoctorForm = ({ data, onEventSave, dataUser, callbackResponse }: { data: a
                 <Col sm="6">
                     <Form.Group className="mb-3">
                         <Form.Label>CMP</Form.Label>
-                        <Form.Control type="text" placeholder="Colegio de Médicos del Perú" onChange={ handleChangeCmp } value={ Cmp.value }/>
+                        <Form.Control isInvalid={ Cmp.value == '' ? true : false } isValid={ Grado.value != '' ? true : false } type="text" placeholder="Colegio de Médicos del Perú" onChange={ handleChangeCmp } value={ Cmp.value }/>
                     </Form.Group>
                 </Col>
                 <Col sm="6">
                     <Form.Group className="mb-3">
                         <Form.Label>Especialidad</Form.Label>
-                        <Form.Select onChange={ handleChangeEspecialidad } value={ Especialidad.value }>
+                        <Form.Select isInvalid={ Especialidad.value == 'Seleccionar' ? true : false } isValid={ Especialidad.value != 'Seleccionar' ? true : false } onChange={ handleChangeEspecialidad } value={ Especialidad.value }>
                             <option>Seleccionar</option>
                             {
                                 specialties.map((item: any, index: number) =>
@@ -142,7 +147,7 @@ const DoctorForm = ({ data, onEventSave, dataUser, callbackResponse }: { data: a
 
             <Form.Group className="mb-3">
                 <Form.Label>Grado de instrucción</Form.Label>
-                <Form.Control type="text" placeholder="Bachiller, Magister, Doctor" onChange={ handleChangeGrado } value={ Grado.value }/>
+                <Form.Control isInvalid={ Grado.value == '' ? true : false } isValid={ Grado.value != '' ? true : false } type="text" placeholder="Bachiller, Magister, Doctor" onChange={ handleChangeGrado } value={ Grado.value }/>
             </Form.Group>
         </Form>
         )

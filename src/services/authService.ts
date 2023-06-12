@@ -11,6 +11,7 @@ export const Authenticate = async (username: string, password: string, keepSessi
       Credentials: credentialsEncrypt,
       KeepSessionOpen: keepSessionOpen
     }
+
     const result = await invoke('/auth/login', payload, false)
 
     let data = null
@@ -19,4 +20,15 @@ export const Authenticate = async (username: string, password: string, keepSessi
       setItem(keySession, data)
     }
     return data
+}
+
+export const verifyEmail = async (email: string) => {
+  const payload = {
+    Email: email
+  }
+  const result = await invoke('/auth/verifyEmail', payload, false)
+  if(result && result.data){
+      return result.data
+  }
+  return null
 }

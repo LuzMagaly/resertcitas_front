@@ -23,7 +23,7 @@ const UserForm = ({ data, onEventSave, callbackResponse }: { data: any, onEventS
         const [Direccion, setDireccion] = useState<any>({ value: '', state: 0, message: '' })
         const [Telefono, setTelefono] = useState<any>({ value: '', state: 0, message: '' })
         const [Correo, setCorreo] = useState<any>({ value: '', state: 0, message: '' })
-        const [Sexo, setSexo] = useState<any>({ value: '', state: 0, message: '' })
+        const [Sexo, setSexo] = useState<any>({ value: 'Seleccionar', state: 0, message: '' })
 
     //#endregion
 
@@ -60,7 +60,10 @@ const UserForm = ({ data, onEventSave, callbackResponse }: { data: any, onEventS
 
         //default method to init
         const saveUser = async() => {
-            //verify the form
+
+            if(DNI.value == '' || Nombres.value == '' || Apellido_Paterno.value == '' || Apellido_Materno.value == '' || Fecha_Nacimiento.value == '' || Direccion.value == '' || Telefono.value == '' || Correo.value == '' || Sexo.value == 'Seleccionar'){
+                return
+            }
             handleToggleConfirm()
         }
 
@@ -204,13 +207,13 @@ const UserForm = ({ data, onEventSave, callbackResponse }: { data: any, onEventS
             <Col sm="8">
                 <Form.Group className="mb-3" >
                     <Form.Label>Nombres</Form.Label>
-                    <Form.Control value={ Nombres.value } onChange={ handleChangeNombres } type="text" placeholder="Ingrese sus nombres completos" autoFocus />
+                    <Form.Control isInvalid={ Nombres.value.length == 0 ? true : false } isValid={ Nombres.value.length > 2 ? true : false } value={ Nombres.value } onChange={ handleChangeNombres } type="text" placeholder="Ingrese sus nombres completos" autoFocus />
                 </Form.Group>
             </Col>
             <Col sm="4">
                 <Form.Group className="mb-3">
                     <Form.Label>DNI</Form.Label>
-                    <Form.Control value={ DNI.value } onChange={ handleChangeDNI } type="text" placeholder="XXXXXXXX" />
+                    <Form.Control isInvalid={ DNI.value.length == 0 ? true : false } isValid={ DNI.value.length > 7 ? true : false } value={ DNI.value } onChange={ handleChangeDNI } type="number" placeholder="XXXXXXXX" />
                 </Form.Group>
             </Col>
         </Row>
@@ -219,13 +222,13 @@ const UserForm = ({ data, onEventSave, callbackResponse }: { data: any, onEventS
             <Col sm="6">
                 <Form.Group className="mb-3">
                     <Form.Label>Apellido paterno</Form.Label>
-                    <Form.Control value={ Apellido_Paterno.value } onChange={ handleChangeApellido_Paterno } type="text" placeholder="Ingrese su apellido paterno" />
+                    <Form.Control isInvalid={ Apellido_Paterno.value.length == 0 ? true : false } isValid={ Apellido_Paterno.value.length > 2 ? true : false } value={ Apellido_Paterno.value } onChange={ handleChangeApellido_Paterno } type="text" placeholder="Ingrese su apellido paterno" />
                 </Form.Group>
             </Col>
             <Col sm="6">
                 <Form.Group className="mb-3">
                     <Form.Label>Apellido materno</Form.Label>
-                    <Form.Control value={ Apellido_Materno.value } onChange={ handleChangeApellido_Materno } type="text" placeholder="Ingrese su apellido materno" />
+                    <Form.Control isInvalid={ Apellido_Materno.value.length == 0 ? true : false } isValid={ Apellido_Materno.value.length > 2 ? true : false } value={ Apellido_Materno.value } onChange={ handleChangeApellido_Materno } type="text" placeholder="Ingrese su apellido materno" />
                 </Form.Group>
             </Col>
         </Row>
@@ -234,13 +237,13 @@ const UserForm = ({ data, onEventSave, callbackResponse }: { data: any, onEventS
             <Col sm="8">
                 <Form.Group className="mb-3">
                     <Form.Label>Fecha de nacimiento</Form.Label>
-                    <Form.Control value={ Fecha_Nacimiento.value } onChange={ handleChangeFecha_Nacimiento } type="date" placeholder="DD/MM/YYYY" />
+                    <Form.Control isInvalid={ Fecha_Nacimiento.value.length == 0 ? true : false } isValid={ Fecha_Nacimiento.value.length > 0 ? true : false } value={ Fecha_Nacimiento.value } onChange={ handleChangeFecha_Nacimiento } type="date" placeholder="DD/MM/YYYY" />
                 </Form.Group>
             </Col>
             <Col sm="4">
                 <Form.Group className="mb-3">
                     <Form.Label>Sexo</Form.Label>
-                    <Form.Select value={ Sexo.value } onChange={ handleChangeSexo } aria-label="Default select example">
+                    <Form.Select value={ Sexo.value } onChange={ handleChangeSexo } isInvalid={ Sexo.value == 'Seleccionar' ? true : false } isValid={ Sexo.value != 'Seleccionar' ? true : false }>
                         <option>Seleccionar</option>
                         <option value="M">Masculino</option>
                         <option value="F">Femenino</option>
@@ -253,20 +256,20 @@ const UserForm = ({ data, onEventSave, callbackResponse }: { data: any, onEventS
             <Col sm="8">
                 <Form.Group className="mb-3">
                     <Form.Label>Correo electrónico</Form.Label>
-                    <Form.Control value={ Correo.value } onChange={ handleChangeCorreo } type="email" placeholder="mi_email@email.com" />
+                    <Form.Control isInvalid={ Correo.value.length == 0 ? true : false } isValid={ Correo.value.length > 0 ? true : false } value={ Correo.value } onChange={ handleChangeCorreo } type="email" placeholder="mi_email@email.com" />
                 </Form.Group>
             </Col>
             <Col sm="4">
                 <Form.Group className="mb-3">
                     <Form.Label>Teléfono</Form.Label>
-                    <Form.Control value={ Telefono.value } onChange={ handleChangeTelefono } type="text" placeholder="xxx xxx xxx" />
+                    <Form.Control isInvalid={ Telefono.value.length == 0 ? true : false } isValid={ Telefono.value.length > 0 ? true : false } value={ Telefono.value } onChange={ handleChangeTelefono } type="text" placeholder="xxx xxx xxx" />
                 </Form.Group>
             </Col>
         </Row>
 
         <Form.Group className="mb-3">
             <Form.Label>Dirección</Form.Label>
-            <Form.Control value={ Direccion.value } onChange={ handleChangeDireccion } type="text" placeholder="Ingrese su dirección" />
+            <Form.Control isInvalid={ Direccion.value.length == 0 ? true : false } isValid={ Direccion.value.length > 0 ? true : false } value={ Direccion.value } onChange={ handleChangeDireccion } type="text" placeholder="Ingrese su dirección" />
         </Form.Group>
 
         <br/>

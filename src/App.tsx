@@ -6,12 +6,6 @@ import AppRouter from "./routes/appRouter"
 
 import { AuthProvider } from './providers/authContext';
 
-
-
-
-
-
-
 //tezt
 import io from 'socket.io-client'
 import { useEffect } from "react"

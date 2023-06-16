@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext } from 'react' //noesreactivo,
 import { Col, Form, Row, Image, Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
@@ -9,9 +9,10 @@ import { updateUser } from '../../services/userService'
 import { updatePassword } from '../../services/userService'
 
 const UserForm = ({ data }: { data: any }) => {
-
-    //#region [ VARIABLES ]
-        const { session } = useContext(AuthContext)
+//cicli de vida,simular3compor,siertaslogicas,extraer,ejeciituca
+//
+    //#region [ VARIABLES ]//1f 2partes, modific el vlo,1variavle y lo que mdica a la vari
+        const { session } = useContext(AuthContext)//seadefinido
         const [show, setShow] = useState(false)
         const [statusRow, setStatusRow] = useState(0) //status: 0 is new, 1 is update
 

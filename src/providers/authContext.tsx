@@ -2,12 +2,13 @@ import { useState, useEffect, createContext, Dispatch, SetStateAction } from 're
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import Login from '../pages/login'
 import Loader from '../pages/loader'
-
+//guardadatos sesi
+//
 interface IAuthContext {
   session: any | null
   setSession: Dispatch<SetStateAction<any | null>>
 }
-
+//funcmodifi
 export const AuthContext = createContext<IAuthContext>({
   session: null,
   setSession: () => {}
@@ -26,7 +27,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
     setLoading(false)
   }, [])
 
-
+//secreahijos
   return (
     <AuthContext.Provider value={{ session, setSession }}>
         { loading? <Loader/> : ((session?.Sesiones[0].Token)? children : <Login />)}

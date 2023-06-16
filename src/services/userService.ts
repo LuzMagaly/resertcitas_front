@@ -1,5 +1,14 @@
 import { invoke } from "../server/api"
 
+export const getUserAll = async () => {
+  const result = await invoke('/user/getOne', {}, true)
+  let data = null
+  if(result && result.data){
+    data = result.data
+  }
+  return data
+}
+
 export const getUserById = async (userId: number) => {
     const payload = {
         Id: userId
@@ -10,6 +19,20 @@ export const getUserById = async (userId: number) => {
       data = result.data
     }
     return data
+}
+
+export const getUserByDNI = async (Dni: string) => {
+  const payload = {
+    Options: {
+      DNI: Dni
+    }
+  }
+  const result = await invoke('/user/Find', payload, true)
+  let data = null
+  if(result && result.data){
+    data = result.data
+  }
+  return data
 }
 
 export const createUser = async (payload: any) => {

@@ -1,13 +1,36 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Table, Container, Button } from 'react-bootstrap'
-import PatientModal from './modals/patientModal'
+import EditorUserModal from './modals/editorUserModal'
+import { getPatientAll } from '../services/patientService'
 
 const Patient = () => {
   const [show, setShow] = useState(false)
   const [dataIni, setDataIni] = useState([])
+  const [editId, setEditId] = useState<number | null>(null)
 
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
+
+  useEffect(() => {
+    getRows()
+  }, [])
+
+  const getRows = async () => {
+    const result = await getPatientAll()
+    if(result && result.length && result.length > 0){
+      setDataIni(result)
+    }
+  }
+
+  const editRow = (id: number) => {
+    setEditId(id)
+    handleShow()
+  }
+
+  const newRow = () => {
+    setEditId(null)
+    handleShow()
+  }
 
   return (
     <Fragment>
@@ -17,7 +40,7 @@ const Patient = () => {
             <h1>Pacientes</h1>
           </div>
           <div className="p-2 bd-highlight">
-            <Button variant="primary" onClick={ handleShow }>Nuevo</Button>{' '}
+            <Button variant="primary" onClick={ newRow }>Nuevo</Button>{' '}
           </div>
         </div>
         <hr/>
@@ -44,17 +67,36 @@ const Patient = () => {
             </tr>
           </thead>
           <tbody>
-            <tr onClick={ handleShow }>
-              <td>1</td>
-              {Array.from({ length: 12 }).map((_, index) => (
-                <td key={index}>Table cell {index}</td>
-              ))}
-            </tr>
+            {
+              dataIni.map((item: any, index: number) => (
+                <tr key={ index } onClick={ () => editRow(item.Id) }>
+                  <td className="text-center">{ item.Id }</td>
+                  <td className="text-center">{ item.Usuarios_Pacientes_Id_UsuarioToUsuarios.DNI }</td>
+                  <td className="text-center">{ item.Usuarios_Pacientes_Id_UsuarioToUsuarios.Nombres }</td>
+                  <td className="text-center">{ item.Usuarios_Pacientes_Id_UsuarioToUsuarios.Apellido_Paterno }</td>
+                  <td className="text-center">{ item.Usuarios_Pacientes_Id_UsuarioToUsuarios.Apellido_Materno }</td>
+                  <td className="text-center">{ new Date(item.Usuarios_Pacientes_Id_UsuarioToUsuarios.Fecha_Nacimiento).toLocaleDateString('en-GB') }</td>
+                  <td className="text-center">{ item.Usuarios_Pacientes_Id_UsuarioToUsuarios.Direccion }</td>
+                  <td className="text-center">{ item.Usuarios_Pacientes_Id_UsuarioToUsuarios.Telefono }</td>
+                  <td className="text-center">{ item.Usuarios_Pacientes_Id_UsuarioToUsuarios.Sexo == 'M' ? 'Masculino' : 'Femenino' }</td>
+                  <td className="text-center">{ item.Tiene_Alergias == '1' ? 'Sí' : 'No' }</td>
+                  <td className="text-center">{ item.Alergias }</td>
+                  <td className="text-center">{ item.Tipo_Sangre }</td>
+                  <td className="text-center">{ item.Factor_Sangre }</td>
+                  <td className="text-center">{ item.Donacion_Organos == '1' ? 'Sí' : 'No' }</td>
+                  <td className="text-center">{ item.Contacto_Emergencia }</td>
+                  <td className="text-center">{ item.Numero_Emergencia_1 }</td>
+                  <td className="text-center">{ item.Numero_Emergencia_2 }</td>
+                </tr>
+              ))
+            }
           </tbody>
         </Table>
       </Container>
 
-      <PatientModal show={ show } handleClose={ handleClose }/>
+      {
+        !!show && <EditorUserModal show={ show } handleClose={ handleClose } type={ 'paciente' } userID={ editId }/>
+      }
     </Fragment>
   )
 }

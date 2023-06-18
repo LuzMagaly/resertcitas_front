@@ -24,13 +24,15 @@ const EditorUserModal = ({ show, handleClose, type, userID = null }: { show: boo
   const selectUser = (typeSelect: number, data: any) => {
     setUserSelected(typeSelect)
     setDataUser(data)
-    if(type == 'médico'){
-      getDoctor(data.DNI)
-      return
-    }
-    if(type == 'paciente'){
-      getPatient(data.DNI)
-      return
+    if(typeSelect == 2){
+      if(type == 'médico'){
+        getDoctor(data.DNI)
+        return
+      }
+      if(type == 'paciente'){
+        getPatient(data.DNI)
+        return
+      }
     }
   }
 

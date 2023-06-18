@@ -8,18 +8,10 @@ import { createUser } from '../../services/userService'
 import { updateUser } from '../../services/userService'
 import { updatePassword } from '../../services/userService'
 
-<<<<<<< HEAD
-const UserForm = ({ data }: { data: any }) => {
-//cicli de vida,simular3compor,siertaslogicas,extraer,ejeciituca
-//
-    //#region [ VARIABLES ]//1f 2partes, modific el vlo,1variavle y lo que mdica a la vari
-        const { session } = useContext(AuthContext)//seadefinido
-=======
 const UserForm = ({ data, onEventSave, callbackResponse }: { data: any, onEventSave: number, callbackResponse?: any }) => {
 
     //#region [ VARIABLES ]
         const { session } = useContext(AuthContext)
->>>>>>> d16128aab6d2d21bc3ef7083f9d9decf21012e8a
         const [show, setShow] = useState(false)
         const [statusRow, setStatusRow] = useState(0) //status: 0 is new, 1 is update
 

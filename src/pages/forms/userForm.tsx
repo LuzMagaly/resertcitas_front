@@ -42,7 +42,7 @@ const UserForm = ({ data, onEventSave, callbackResponse }: { data: any, onEventS
 
     //#region [ METHODS ]
 
-        const loadData = async () => {
+        const loadData = () => {
             if(!data){
                 return
             }

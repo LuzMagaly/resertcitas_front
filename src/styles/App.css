@@ -136,6 +136,13 @@ li a.dropdown-toggle::after {
   left: 250px;
 }
 
+.timetableHours:hover {
+  background-color: #FFA9C7 !important;
+}
+
+
+
+
 @media only screen and (max-width: 575.98px) {
   body {
     overflow:  hidden;

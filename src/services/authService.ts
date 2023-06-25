@@ -1,3 +1,4 @@
+import { apiControl } from "../errors/apiControl"
 import { EncryptRSA } from '../hooks/useEncrypt'
 import { useLocalStorage } from "../hooks/useLocalStorage"
 import { invoke } from "../server/api"
@@ -27,8 +28,5 @@ export const verifyEmail = async (email: string) => {
     Email: email
   }
   const result = await invoke('/auth/verifyEmail', payload, false)
-  if(result && result.data){
-      return result.data
-  }
-  return null
+  return apiControl(result)
 }

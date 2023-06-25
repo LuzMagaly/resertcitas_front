@@ -1,3 +1,4 @@
+import { apiControl } from "../errors/apiControl"
 import { invoke } from "../server/api"
 
 export const getAppointmentById = async (id: number) => {
@@ -5,11 +6,7 @@ export const getAppointmentById = async (id: number) => {
         Id: id
     }
     const result = await invoke('/appointment/getOne', payload, true)
-    let data = null
-    if(result && result.data){
-      data = result.data
-    }
-    return data
+    return apiControl(result)
 }
 
 export const getAppointmentByPatient = async (id: number) => {
@@ -17,11 +14,7 @@ export const getAppointmentByPatient = async (id: number) => {
         Id: id
     }
     const result = await invoke('/appointment/getByPatient', payload, true)
-    let data = null
-    if(result && result.data){
-      data = result.data
-    }
-    return data
+    return apiControl(result)
 }
 
 export const saveAppointment = async (item: any) => {
@@ -29,11 +22,7 @@ export const saveAppointment = async (item: any) => {
         Item: item
     }
     const result = await invoke('/appointment/save', payload, true)
-    let data = null
-    if(result && result.data){
-      data = result.data
-    }
-    return data
+    return apiControl(result)
 }
 
 export const updateAppointment = async (item: any) => {
@@ -41,9 +30,5 @@ export const updateAppointment = async (item: any) => {
         Item: item
     }
     const result = await invoke('/appointment/update', payload, true)
-    let data = null
-    if(result && result.data){
-      data = result.data
-    }
-    return data
+    return apiControl(result)
 }

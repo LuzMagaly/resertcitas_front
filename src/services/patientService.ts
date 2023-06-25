@@ -1,12 +1,9 @@
+import { apiControl } from "../errors/apiControl"
 import { invoke } from "../server/api"
 
 export const getPatientAll = async () => {
     const result = await invoke('/patient/getAll', {}, true)
-    let data = null
-    if(result && result.data){
-      data = result.data
-    }
-    return data
+    return apiControl(result)
 }
 
 export const getPatientById = async (id: number) => {
@@ -14,11 +11,7 @@ export const getPatientById = async (id: number) => {
         Id: id
     }
     const result = await invoke('/patient/getOne', payload, true)
-    let data = null
-    if(result && result.data){
-      data = result.data
-    }
-    return data
+    return apiControl(result)
 }
 
 export const getPatientByUser = async (filters: any) => {
@@ -26,11 +19,7 @@ export const getPatientByUser = async (filters: any) => {
         Options: filters
     }
     const result = await invoke('/patient/getByUser', payload, true)
-    let data = null
-    if(result && result.data){
-      data = result.data
-    }
-    return data
+    return apiControl(result)
 }
 
 export const savePatient = async (item: any) => {
@@ -38,11 +27,7 @@ export const savePatient = async (item: any) => {
         Item: item
     }
     const result = await invoke('/patient/save', payload, true)
-    let data = null
-    if(result && result.data){
-      data = result.data
-    }
-    return data
+    return apiControl(result)
 }
 
 export const updatePatient = async (item: any) => {
@@ -50,11 +35,7 @@ export const updatePatient = async (item: any) => {
         Item: item
     }
     const result = await invoke('/patient/update', payload, true)
-    let data = null
-    if(result && result.data){
-      data = result.data
-    }
-    return data
+    return apiControl(result)
 }
 
 export const deletePatient = async (item: any) => {
@@ -62,9 +43,5 @@ export const deletePatient = async (item: any) => {
         Item: item
     }
     const result = await invoke('/patient/delete', payload, true)
-    let data = null
-    if(result && result.data){
-      data = result.data
-    }
-    return data
+    return apiControl(result)
 }

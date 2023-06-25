@@ -1,11 +1,9 @@
+import { apiControl } from "../errors/apiControl"
 import { invoke } from "../server/api"
 
 export const getSpecialtyAll = async () => {
     const result = await invoke('/specialty/getAll', {})
-    if(result && result.data){
-        return result.data
-    }
-    return null
+    return apiControl(result)
 }
 
 export const getSpecialtyById = async (id: number) => {
@@ -13,8 +11,5 @@ export const getSpecialtyById = async (id: number) => {
         Id: id
     }
     const result = await invoke('/specialty/getOne', payload)
-    if(result && result.data){
-        return result.data
-    }
-    return null
+    return apiControl(result)
 }

@@ -1,12 +1,9 @@
+import { apiControl } from "../errors/apiControl"
 import { invoke } from "../server/api"
 
 export const getUserAll = async () => {
   const result = await invoke('/user/getOne', {}, true)
-  let data = null
-  if(result && result.data){
-    data = result.data
-  }
-  return data
+  return apiControl(result)
 }
 
 export const getUserById = async (userId: number) => {
@@ -14,11 +11,7 @@ export const getUserById = async (userId: number) => {
         Id: userId
     }
     const result = await invoke('/user/getOne', payload, true)
-    let data = null
-    if(result && result.data){
-      data = result.data
-    }
-    return data
+return apiControl(result)
 }
 
 export const getUserByDNI = async (Dni: string) => {
@@ -28,36 +21,20 @@ export const getUserByDNI = async (Dni: string) => {
     }
   }
   const result = await invoke('/user/Find', payload, true)
-  let data = null
-  if(result && result.data){
-    data = result.data
-  }
-  return data
+  return apiControl(result)
 }
 
 export const createUser = async (payload: any) => {
   const result = await invoke('/user/save', payload, true)
-  let data = null
-  if(result && result.data){
-    data = result.data
-  }
-  return data
+  return apiControl(result)
 }
 
 export const updateUser = async (payload: any) => {
   const result = await invoke('/user/update', payload, true)
-  let data = null
-  if(result && result.data){
-    data = result.data
-  }
-  return data
+  return apiControl(result)
 }
 
 export const updatePassword = async (payload: any) => {
   const result = await invoke('/user/changePass', payload, true)
-  let data = null
-  if(result && result.data){
-    data = result.data
-  }
-  return data
+  return apiControl(result)
 }

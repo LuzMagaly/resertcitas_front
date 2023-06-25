@@ -1,3 +1,4 @@
+import { apiControl } from "../errors/apiControl"
 import { invoke } from "../server/api"
 
 export const getTimetableById = async (id: number) => {
@@ -5,11 +6,7 @@ export const getTimetableById = async (id: number) => {
         Id: id
     }
     const result = await invoke('/timetable/getOne', payload, true)
-    let data = null
-    if(result && result.data){
-      data = result.data
-    }
-    return data
+    return apiControl(result)
 }
 
 export const getTimetableByDoctor = async (id: number) => {
@@ -17,11 +14,7 @@ export const getTimetableByDoctor = async (id: number) => {
         Id: id
     }
     const result = await invoke('/timetable/getByDoctor', payload, true)
-    let data = null
-    if(result && result.data){
-      data = result.data
-    }
-    return data
+    return apiControl(result)
 }
 
 export const getTimetableBySpecialty = async (id: number) => {
@@ -29,23 +22,15 @@ export const getTimetableBySpecialty = async (id: number) => {
         Id: id
     }
     const result = await invoke('/timetable/getBySpecialty', payload, true)
-    let data = null
-    if(result && result.data){
-      data = result.data
-    }
-    return data
+    return apiControl(result)
 }
 
-export const saveTimetable = async (item: any) => {
+export const saveTimetable = async (items: any) => {
     const payload = {
-        Item: item
+        Items: items
     }
     const result = await invoke('/timetable/save', payload, true)
-    let data = null
-    if(result && result.data){
-      data = result.data
-    }
-    return data
+    return apiControl(result)
 }
 
 export const updateTimetable = async (item: any) => {
@@ -53,9 +38,5 @@ export const updateTimetable = async (item: any) => {
         Item: item
     }
     const result = await invoke('/timetable/update', payload, true)
-    let data = null
-    if(result && result.data){
-      data = result.data
-    }
-    return data
+    return apiControl(result)
 }

@@ -1,7 +1,7 @@
 import { Spinner, Modal } from 'react-bootstrap'
 
 const Loading = ({ show, handleClose, state }: { show: boolean, handleClose: any, state: any }) => {
-  return (
+    return (
         <Modal show={ show } onHide={ handleClose } centered>
             <Modal.Body>
                 <div className="position-relative">
@@ -15,8 +15,7 @@ const Loading = ({ show, handleClose, state }: { show: boolean, handleClose: any
                 </div>
             </Modal.Body>
         </Modal>
-
-  )
+    )
 }
 
 export default Loading

@@ -90,8 +90,8 @@ a:focus {
   background: #322077 !important;
 }
 
-.nav-item:hover {
-  background: #322077;
+.itembar:hover {
+  background: #322077 !important;
   color: #fff;
   transition: .2s;
 }

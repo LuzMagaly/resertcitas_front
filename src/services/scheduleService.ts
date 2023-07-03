@@ -17,18 +17,12 @@ export const getScheduleByDoctor = async (id: number) => {
     return apiControl(result)
 }
 
-export const getScheduleBySpecialty = async (id: number) => {
-    const payload = {
-        Id: id
-    }
+export const getScheduleBySpecialty = async (payload: any) => {
     const result = await invoke('/schedule/getBySpecialty', payload, true)
     return apiControl(result)
 }
 
-export const saveSchedule = async (item: any) => {
-    const payload = {
-        Item: item
-    }
+export const saveSchedule = async (payload: any) => {
     const result = await invoke('/schedule/save', payload, true)
     return apiControl(result)
 }

@@ -5,29 +5,44 @@ import ContentCard from "./cards/contentCard"
 import { Fragment, useEffect, useState } from "react"
 import Confirm from "../components/confirm"
 import Message from "../components/message"
-import Loading from "../components/loader"
 import Proccessing from "../components/proccessing"
 import { getTimetableByDoctor, saveTimetable } from "../services/timetableService"
+import { getOfficeBySpecialty } from "../services/officeService"
+import { days, hours } from "../constants/date"
 
 const Schedules = () => {
 
+  //Obtener desde la sesion
   const id_doctor = 1
+  const id_especialidad = 2
+
   const [confirm, setConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState(false)
 
-  const daysWeek = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
-  const standarHours = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00']
+  const daysWeek = days
+  const standarHours = hours
   const [selectedHours, setSelectedHours] = useState<any[]>([])
+  const [offices, setOffices] = useState<any[]>([])
+  const [selectedOffice, setSelectedOffice] = useState<any>()
 
   useEffect(() => {
     getRows()
+    getOffices()
   }, [])
 
   const getRows = async () => {
     const result: any = await getTimetableByDoctor(id_doctor)
     if(result && result.length && result.length > 0){
       setSelectedHours(formatArray(result))
+    }
+  }
+
+  const getOffices = async () => {
+    const result = await getOfficeBySpecialty(id_especialidad.toString())
+    if(result && result.length && result.length > 0){
+      setOffices(result)
+      setSelectedOffice(result[0].Id)
     }
   }
 
@@ -66,7 +81,7 @@ const Schedules = () => {
   }
 
   const saveRows = () => {
-    if(selectedHours && selectedHours.length && selectedHours.length > 0){
+    if(selectedHours && selectedHours.length && selectedHours.length > 0 && selectedOffice){
     setConfirm(true)
     }
   }
@@ -82,21 +97,45 @@ const Schedules = () => {
         Hora_Inicio: new Date("01-01-2020 " + item.hora + ":00"),
         Hora_Fin: new Date("01-01-2020 " + item.hora.replace('00', '59') + ":00"),
         Dia_Nombre: item.dia,
-        Estado: 'ACTIVO',
+        Estado: selectedOffice.toString(),
       }
       payload_items.push(payload)
     })
     const result = await saveTimetable(payload_items)
     setLoading(false)
     if(result){
+      getRows()
+    }
+  }
 
+  const handleChangeOffice = (event: any) => {
+    const value = event.target.value
+    if(value){
+      setSelectedOffice(value)
     }
   }
 
   return (
     <Fragment>
       <Container>
-        <Button onClick={ saveRows }>Guardar</Button>
+        <div className="d-flex">
+          <div className="me-auto p-0">
+            <h1>Mi Horario</h1>
+          </div>
+          <div className="p-1">
+            <Form.Select onChange={ handleChangeOffice } value={ selectedOffice }>
+              {
+                offices.map((item: any, index: number) =>
+                  <option key={ index } value={ item.Id }>{ item.Nombre }</option>
+                )
+              }
+            </Form.Select>
+          </div>
+          <div className="p-1">
+            <Button variant="success" onClick={ saveRows }>Guardar cambios</Button>
+          </div>
+        </div>
+        <hr/>
         <div className="d-flex flex-row">
           <div className="p-0 m-1" style={{ width: '15rem' }}></div>
           {

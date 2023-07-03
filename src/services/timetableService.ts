@@ -17,10 +17,7 @@ export const getTimetableByDoctor = async (id: number) => {
     return apiControl(result)
 }
 
-export const getTimetableBySpecialty = async (id: number) => {
-    const payload = {
-        Id: id
-    }
+export const getTimetableBySpecialty = async (payload: any) => {
     const result = await invoke('/timetable/getBySpecialty', payload, true)
     return apiControl(result)
 }

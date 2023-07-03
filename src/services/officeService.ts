@@ -13,3 +13,11 @@ export const getOfficeById = async (id: number) => {
     const result = await invoke('/office/getById', payload, true)
     return apiControl(result)
 }
+
+export const getOfficeBySpecialty = async (id: string) => {
+    const payload = {
+        Id: id
+    }
+    const result = await invoke('/office/getBySpecialty', payload, true)
+    return apiControl(result)
+}

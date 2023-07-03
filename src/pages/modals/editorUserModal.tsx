@@ -38,6 +38,7 @@ const EditorUserModal = ({ show, handleClose, type, userID = null }: { show: boo
 
   const getPerson = async () => {
     const result = await getUserById(userID as number)
+    console.log(result)
     setDataUser(result)
     if(result){
       if(type == 'médico'){

@@ -8,7 +8,10 @@ const Doctor = () => {
   const [dataIni, setDataIni] = useState([])
   const [editId, setEditId] = useState<number | null>(null)
 
-  const handleClose = () => setShow(false)
+  const handleClose = () => {
+    setShow(false)
+    getRows()
+  }
   const handleShow = () => setShow(true)
 
   useEffect(() => {

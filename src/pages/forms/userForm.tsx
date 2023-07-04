@@ -8,7 +8,7 @@ import { createUser } from '../../services/userService'
 import { updateUser } from '../../services/userService'
 import { updatePassword } from '../../services/userService'
 
-const UserForm = ({ data, onEventSave, callbackResponse }: { data: any, onEventSave: number, callbackResponse?: any }) => {
+const UserForm = ({ data, onEventSave, callbackResponse, typeUser }: { data: any, onEventSave: number, callbackResponse?: any, typeUser?: any }) => {
 
     //#region [ VARIABLES ]
         const { session } = useContext(AuthContext)
@@ -68,9 +68,26 @@ const UserForm = ({ data, onEventSave, callbackResponse }: { data: any, onEventS
         }
 
         const sendData = async() => {
+            let role = 1
+            if(typeUser){
+                if(typeUser == 'médico'){
+                    role = 2
+                }
+                else{
+                    role = 1
+                }
+            }
+            else{
+                if(data){
+                    role = data.Id_Rol
+                }
+                else {
+                    role = 1
+                }
+            }
             const payload: any = {
                 Item: {
-                    Id_Rol: 1,
+                    Id_Rol: role,
                     DNI: DNI.value,
                     Nombres: Nombres.value,
                     Apellido_Paterno: Apellido_Paterno.value,
@@ -101,9 +118,6 @@ const UserForm = ({ data, onEventSave, callbackResponse }: { data: any, onEventS
                 callbackResponse(result)
             }
             handleToggleConfirm()
-        }
-
-        const changePassword = async () => {
         }
 
     //#endregion

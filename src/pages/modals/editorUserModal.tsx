@@ -95,7 +95,7 @@ const EditorUserModal = ({ show, handleClose, type, userID = null }: { show: boo
                 <Accordion.Item eventKey="0">
                   <Accordion.Header>Datos generales</Accordion.Header>
                   <Accordion.Body style={{ backgroundColor: 'white' }}>
-                    <UserForm data={ dataUser } onEventSave={ eventSave } callbackResponse={ callbackResponseUser }/>
+                    <UserForm data={ dataUser } onEventSave={ eventSave } callbackResponse={ callbackResponseUser } typeUser={ type }/>
                   </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="1">

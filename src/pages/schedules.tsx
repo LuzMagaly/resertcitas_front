@@ -2,23 +2,27 @@ import { Button, Container, Form } from "react-bootstrap"
 import TitleCard from "./cards/titleCard"
 import ColumnCard from "./cards/columnCard"
 import ContentCard from "./cards/contentCard"
-import { Fragment, useEffect, useState } from "react"
+import { Fragment, useContext, useEffect, useState } from "react"
 import Confirm from "../components/confirm"
 import Message from "../components/message"
 import Proccessing from "../components/proccessing"
 import { getTimetableByDoctor, saveTimetable } from "../services/timetableService"
 import { getOfficeBySpecialty } from "../services/officeService"
 import { days, hours } from "../constants/date"
+import { AuthContext } from "../providers/authContext"
+import { getDoctorByUser } from "../services/doctorService"
 
 const Schedules = () => {
 
   //Obtener desde la sesion
-  const id_doctor = 1
-  const id_especialidad = 2
+  const { session } = useContext(AuthContext)
+  let id_doctor = 0
+  let id_especialidad = 0
 
   const [confirm, setConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState(false)
+  const [visibility, setVisibility] = useState(true)
 
   const daysWeek = days
   const standarHours = hours
@@ -27,12 +31,18 @@ const Schedules = () => {
   const [selectedOffice, setSelectedOffice] = useState<any>()
 
   useEffect(() => {
+    console.log(session)
+    if(session.Roles.Nombre != 'Medico'){
+      setVisibility(false)
+      return
+    }
+    getDoctor()
     getRows()
-    getOffices()
   }, [])
 
   const getRows = async () => {
     const result: any = await getTimetableByDoctor(id_doctor)
+    console.log(result)
     if(result && result.length && result.length > 0){
       setSelectedHours(formatArray(result))
     }
@@ -44,6 +54,21 @@ const Schedules = () => {
       setOffices(result)
       setSelectedOffice(result[0].Id)
     }
+  }
+
+  const getDoctor = async () => {
+    const filters = {
+      Nombres: '',
+      Apellido_Paterno: '',
+      Apellido_Materno: '',
+      DNI: session.DNI
+    }
+    const result: any = await getDoctorByUser(filters)
+    if(result && result.length && result.length > 0){
+      id_doctor = result[0].Id
+      id_especialidad = result[0].Especialidades.Id
+    }
+    getOffices()
   }
 
   const formatArray = (data: any[]): any[] => {
@@ -101,6 +126,7 @@ const Schedules = () => {
       }
       payload_items.push(payload)
     })
+    console.log(payload_items)
     const result = await saveTimetable(payload_items)
     setLoading(false)
     if(result){
@@ -117,46 +143,51 @@ const Schedules = () => {
 
   return (
     <Fragment>
-      <Container>
-        <div className="d-flex">
-          <div className="me-auto p-0">
-            <h1>Mi Horario</h1>
-          </div>
-          <div className="p-1">
-            <Form.Select onChange={ handleChangeOffice } value={ selectedOffice }>
+      {
+        visibility ?
+          <Container>
+            <div className="d-flex">
+              <div className="me-auto p-0">
+                <h1>Mi Horario</h1>
+              </div>
+              <div className="p-1">
+                <Form.Select onChange={ handleChangeOffice } value={ selectedOffice }>
+                  {
+                    offices.map((item: any, index: number) =>
+                      <option key={ index } value={ item.Id }>{ item.Nombre }</option>
+                    )
+                  }
+                </Form.Select>
+              </div>
+              <div className="p-1">
+                <Button variant="success" onClick={ saveRows }>Guardar cambios</Button>
+              </div>
+            </div>
+            <hr/>
+            <div className="d-flex flex-row">
+              <div className="p-0 m-1" style={{ width: '15rem' }}></div>
               {
-                offices.map((item: any, index: number) =>
-                  <option key={ index } value={ item.Id }>{ item.Nombre }</option>
+                daysWeek.map((day: any, index: number) =>
+                  <TitleCard key={ index } title={ day }/>
                 )
               }
-            </Form.Select>
-          </div>
-          <div className="p-1">
-            <Button variant="success" onClick={ saveRows }>Guardar cambios</Button>
-          </div>
-        </div>
-        <hr/>
-        <div className="d-flex flex-row">
-          <div className="p-0 m-1" style={{ width: '15rem' }}></div>
-          {
-            daysWeek.map((day: any, index: number) =>
-              <TitleCard key={ index } title={ day }/>
-            )
-          }
-        </div>
-          {
-            standarHours.map((item: any, index: number) =>
-              <div  key={ index } className="d-flex flex-row">
-                <ColumnCard hour={ item }/>
-                {
-                  daysWeek.map((element: any, index: number) =>
-                    <ContentCard key={ index } onClick={ () => selectHour(item, element) } selected={ getSelected(item, element) }/>
-                  )
-                }
-              </div>
-            )
-          }
-      </Container>
+            </div>
+              {
+                standarHours.map((item: any, index: number) =>
+                  <div  key={ index } className="d-flex flex-row">
+                    <ColumnCard hour={ item }/>
+                    {
+                      daysWeek.map((element: any, index: number) =>
+                        <ContentCard key={ index } onClick={ () => selectHour(item, element) } selected={ getSelected(item, element) }/>
+                      )
+                    }
+                  </div>
+                )
+              }
+          </Container>
+        :
+        <span>No tienes acceso a esta página</span>
+      }
       {
         !!confirm &&
           <Confirm show={ confirm } handleClose={ () => setConfirm(false) } action={ sendRowsToDatabase } title="Confirmación de guardado" message="Esta operación puede tardar algunos segundos, ¿Desea continuar?"/>

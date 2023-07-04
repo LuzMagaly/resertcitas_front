@@ -9,7 +9,7 @@ const Login = () => {
   const { setSession } = useContext(AuthContext);
 
   //ONLY FOR TEST, DELETE THE CREDENTIALS!!!
-  const [user, setUser] = useState('joaquinmedin@gmail.com')
+  const [user, setUser] = useState('joaquinmedina@gmail.com')
   const [pass, setPass] = useState('1234')
   const [keepSessionOpen, setKeepSessionOpen] = useState(true)
   const [passIsVisible, setPassIsVisible] = useState(false)

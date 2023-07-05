@@ -14,7 +14,6 @@ export const Authenticate = async (username: string, password: string, keepSessi
     }
 
     const result = await invoke('/auth/login', payload, false)
-
     let data = null
     if(result && result.data && result.data.Sesiones && result.data.Sesiones.length > 0 && result.data.Sesiones[0] && result.data.Sesiones[0].Token){
       data = result.data

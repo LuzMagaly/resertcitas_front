@@ -16,8 +16,7 @@ const Schedules = () => {
 
   //Obtener desde la sesion
   const { session } = useContext(AuthContext)
-  let id_doctor = 0
-  let id_especialidad = 0
+  const [idDoctor, setIdDoctor] = useState(0)
 
   const [confirm, setConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -37,19 +36,18 @@ const Schedules = () => {
       return
     }
     getDoctor()
-    getRows()
   }, [])
 
-  const getRows = async () => {
-    const result: any = await getTimetableByDoctor(id_doctor)
+  const getRows = async (id_doctor: any = null) => {
+    const result: any = await getTimetableByDoctor(id_doctor ? id_doctor : idDoctor)
     console.log(result)
     if(result && result.length && result.length > 0){
       setSelectedHours(formatArray(result))
     }
   }
 
-  const getOffices = async () => {
-    const result = await getOfficeBySpecialty(id_especialidad.toString())
+  const getOffices = async (especialidad_id: any) => {
+    const result = await getOfficeBySpecialty(especialidad_id.toString())
     if(result && result.length && result.length > 0){
       setOffices(result)
       setSelectedOffice(result[0].Id)
@@ -64,11 +62,13 @@ const Schedules = () => {
       DNI: session.DNI
     }
     const result: any = await getDoctorByUser(filters)
+    console.log(result)
     if(result && result.length && result.length > 0){
-      id_doctor = result[0].Id
-      id_especialidad = result[0].Especialidades.Id
+      const doctor_getted = result[0].Id
+      setIdDoctor(doctor_getted)
+      getOffices(result[0].Especialidades.Id)
+      getRows(doctor_getted)
     }
-    getOffices()
   }
 
   const formatArray = (data: any[]): any[] => {
@@ -118,7 +118,7 @@ const Schedules = () => {
 
     selectedHours.map((item: any) => {
       const payload = {
-        Id_Medico: 1,
+        Id_Medico: idDoctor,
         Hora_Inicio: new Date("01-01-2020 " + item.hora + ":00"),
         Hora_Fin: new Date("01-01-2020 " + item.hora.replace('00', '59') + ":00"),
         Dia_Nombre: item.dia,

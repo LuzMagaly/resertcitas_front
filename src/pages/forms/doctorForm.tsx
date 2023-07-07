@@ -73,7 +73,6 @@ const DoctorForm = ({ data, onEventSave, dataUser, callbackResponse }: { data: a
                 Id_Especialidad: Especialidad.value,
                 Grado_Instruccion: Grado.value
             }
-            console.log(payload)
             let result: any;
             if(statusRow == 0){
                 payload.Creado_Por = session.Id

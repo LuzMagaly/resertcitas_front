@@ -4,6 +4,7 @@ import { getSpecialtyAll } from "../services/specialtyService"
 import { days } from "../constants/date"
 import { getTimetableBySpecialty } from "../services/timetableService"
 import { getScheduleBySpecialty, saveSchedule } from "../services/scheduleService"
+import Consultations from "./tables/consultations"
 
 
 type childrenProps = {
@@ -95,9 +96,7 @@ const Timetable = ({}: childrenProps) => {
       const payload = {
         Items: items
       }
-      console.log(payload)
       const result = await saveSchedule(payload)
-      console.log(result)
       if(result){
         getRows()
       }
@@ -115,6 +114,16 @@ const Timetable = ({}: childrenProps) => {
       const value = event.target.value
       if(value){
         setSelectedSpecialty(value)
+      }
+    }
+
+    const getBySpecialty = (id: number) => {
+      const result = rows.filter((item: any) => item.Medicos.Id_Especialidad == id)
+      if(result && result.length && result.length > 0){
+        return result
+      }
+      else{
+        return []
       }
     }
 
@@ -177,7 +186,7 @@ const Timetable = ({}: childrenProps) => {
             {
               listSpecialties.map((item: any, index: number) =>
                 <Tab key={ index } eventKey={ item.Id } title={ item.Nombre }>
-                  Tab content for me
+                  <Consultations dataList={ getBySpecialty(item.Id) } />
                 </Tab>
               )
             }

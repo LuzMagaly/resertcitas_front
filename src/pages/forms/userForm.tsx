@@ -105,8 +105,6 @@ const UserForm = ({ data, onEventSave, callbackResponse, typeUser }: { data: any
             if(statusRow == 0){
                 payload.Item.Contrasenia = payload.Item.DNI //default pass
                 payload.Item.Creado_Por = session.Id
-                console.log('Creating...')
-                console.log(payload)
                 result = await createUser(payload)
             }
             if (statusRow == 1){

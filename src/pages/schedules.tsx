@@ -35,7 +35,6 @@ const Schedules = () => {
 
   const getRows = async (id_doctor: any = null) => {
     const result: any = await getTimetableByDoctor(id_doctor ? id_doctor : idDoctor)
-    console.log(result)
     if(result && result.length && result.length > 0){
       setSelectedHours(formatArray(result))
     }
@@ -57,7 +56,6 @@ const Schedules = () => {
       DNI: session.DNI
     }
     const result: any = await getDoctorByUser(filters)
-    console.log(result)
     if(result && result.length && result.length > 0){
       const doctor_getted = result[0].Id
       setIdDoctor(doctor_getted)
@@ -124,7 +122,6 @@ const Schedules = () => {
       }
       payload_items.push(payload)
     })
-    console.log(payload_items)
     const result = await saveTimetable(payload_items)
     setLoading(false)
     if(result){

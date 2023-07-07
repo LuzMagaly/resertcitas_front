@@ -21,7 +21,6 @@ function App() {
   useEffect(() => {
     socket.emit('message', 'Hello from client')
     socket.on('message', (message) => {
-      //console.log(message)
     })
   }, [])
 

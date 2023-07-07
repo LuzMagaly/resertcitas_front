@@ -20,7 +20,6 @@ const Patient = () => {
 
   const getRows = async () => {
     const result = await getPatientAll()
-    console.log(result)
     if(result && result.length && result.length > 0){
       setDataIni(result)
     }

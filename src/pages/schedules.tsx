@@ -30,11 +30,6 @@ const Schedules = () => {
   const [selectedOffice, setSelectedOffice] = useState<any>()
 
   useEffect(() => {
-    console.log(session)
-    if(session.Roles.Nombre != 'Medico'){
-      setVisibility(false)
-      return
-    }
     getDoctor()
   }, [])
 
@@ -68,6 +63,9 @@ const Schedules = () => {
       setIdDoctor(doctor_getted)
       getOffices(result[0].Especialidades.Id)
       getRows(doctor_getted)
+    }
+    else{
+      setVisibility(false)
     }
   }
 

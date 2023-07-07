@@ -14,6 +14,8 @@ const Navigation = ({ toggle }: { toggle: any }) => {
   const { session, setSession } = useContext(AuthContext);
   const [show, setShow] = useState(false)
 
+  console.log(session)
+
   const handleClose = () => {
       setShow(!show)
   }

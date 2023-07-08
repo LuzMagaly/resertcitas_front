@@ -39,7 +39,7 @@ const Admin = () => {
                   <Card.Text>{ item.Descripcion }</Card.Text>
                 </Card.ImgOverlay>
               </Card>
-          </Col>
+            </Col>
           )
         }
         </Row>

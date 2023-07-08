@@ -6,7 +6,6 @@ import { getTimetableBySpecialty } from "../services/timetableService"
 import { getScheduleBySpecialty, saveSchedule } from "../services/scheduleService"
 import Consultations from "./tables/consultations"
 
-
 type childrenProps = {
 
 }
@@ -17,6 +16,7 @@ const Schedule = ({}: childrenProps) => {
 
   const daysWeek = days
   const [rows, setRows] = useState<any[]>([])
+  const [loaded, setLoaded] = useState<boolean>(false)
   const [listSpecialties, setListSpecialties] = useState<any[]>([])
   const [currentDate, setCurrentDate] = useState<string>(new Date().toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2'))
   const [selectedSpecialty, setSelectedSpecialty] = useState<any>(0)
@@ -56,6 +56,7 @@ const Schedule = ({}: childrenProps) => {
         Fecha: date
       }
       const result = await getScheduleBySpecialty(payload)
+      setLoaded(true)
       if(result && result.length && result.length > 0){
         setRows(result)
       }
@@ -138,7 +139,7 @@ const Schedule = ({}: childrenProps) => {
         <Container fluid>
           <div className="d-flex bd-highlight mb-3">
             <div className="me-auto p-2 bd-highlight">
-              <h1>Calendario</h1>
+              <h1>Generador de citas</h1>
             </div>
             <div className="p-2 bd-highlight">
             </div>
@@ -167,7 +168,7 @@ const Schedule = ({}: childrenProps) => {
                 </Form.Group>
               </Col>
               {
-                (!rows || rows.length == 0) &&
+                ((!rows || rows.length == 0) && !!loaded) &&
                   <Col sm="1">
                     <div className="mt-4 p-2">
                       <Button variant="primary" onClick={ generateCalendar }>Generar</Button>{' '}

@@ -48,10 +48,9 @@ const DoctorForm = ({ data, onEventSave, dataUser, callbackResponse }: { data: a
             if(!data){
                 return
             }
-            setStatusRow(1)
-            setCmp({ value: data.Codigo, state: 0, message: '' })
-            setEspecialidad({ value: data.Especialidades.Id, state: 0, message: '' })
-            setGrado({ value: data.Grado_Instruccion, state: 0, message: '' })
+            setCmp({ value: data.Codigo, state: 1, message: '' })
+            setEspecialidad({ value: data.Especialidades.Id, state: 1, message: '' })
+            setGrado({ value: data.Grado_Instruccion, state: 1, message: '' })
         }
 
         //default method to init
@@ -70,15 +69,15 @@ const DoctorForm = ({ data, onEventSave, dataUser, callbackResponse }: { data: a
             const payload: any = {
                 Id_Usuario: dataUser.Id,
                 Codigo: Cmp.value,
-                Id_Especialidad: Especialidad.value,
+                Id_Especialidad: parseInt(Especialidad.value),
                 Grado_Instruccion: Grado.value
             }
             let result: any;
-            if(statusRow == 0){
+            if(!data){
                 payload.Creado_Por = session.Id
                 result = await saveDoctor(payload)
             }
-            if (statusRow == 1){
+            else{
                 payload.Id = data.Id
                 payload.Actualizado_Por = session.Id
                 result = await updateDoctor(payload)
@@ -126,7 +125,13 @@ const DoctorForm = ({ data, onEventSave, dataUser, callbackResponse }: { data: a
                 <Col sm="6">
                     <Form.Group className="mb-3">
                         <Form.Label>CMP</Form.Label>
-                        <Form.Control isInvalid={ Cmp.value == '' ? true : false } isValid={ Grado.value != '' ? true : false } type="text" placeholder="Colegio de Médicos del Perú" onChange={ handleChangeCmp } value={ Cmp.value }/>
+                        <Form.Control isInvalid={ Cmp.state == 2 ? true : false } isValid={ Cmp.state == 2 ? true : false } type="text" placeholder="Colegio de Médicos del Perú" onChange={ handleChangeCmp } value={ Cmp.value }/>
+                        {
+                            Cmp.state === 2 &&
+                            <Form.Text className="text-danger">
+                                { Cmp.message }
+                            </Form.Text>
+                        }
                     </Form.Group>
                 </Col>
                 <Col sm="6">
@@ -140,13 +145,25 @@ const DoctorForm = ({ data, onEventSave, dataUser, callbackResponse }: { data: a
                                 )
                             }
                         </Form.Select>
+                        {
+                            Especialidad.state === 2 &&
+                            <Form.Text className="text-danger">
+                                { Especialidad.message }
+                            </Form.Text>
+                        }
                     </Form.Group>
                 </Col>
             </Row>
 
             <Form.Group className="mb-3">
                 <Form.Label>Grado de instrucción</Form.Label>
-                <Form.Control isInvalid={ Grado.value == '' ? true : false } isValid={ Grado.value != '' ? true : false } type="text" placeholder="Bachiller, Magister, Doctor" onChange={ handleChangeGrado } value={ Grado.value }/>
+                <Form.Control isInvalid={ Grado.state == 2 ? true : false } isValid={ Grado.state == 1 ? true : false } type="text" placeholder="Bachiller, Magister, Doctor" onChange={ handleChangeGrado } value={ Grado.value }/>
+                {
+                    Grado.state === 2 &&
+                    <Form.Text className="text-danger">
+                        { Grado.message }
+                    </Form.Text>
+                }
             </Form.Group>
         </Form>
         )

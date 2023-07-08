@@ -8,7 +8,6 @@ const Consultations = ({ dataList }: childrenProps) => {
 
     useEffect(() => {
         if(dataList && dataList.length && dataList.length > 0){
-            console.log(dataList)
         }
     }, [dataList])
     

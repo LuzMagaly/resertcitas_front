@@ -10,8 +10,8 @@ import Appointment from '../pages/appointment';
 import Doctor from '../pages/doctor';
 import Patient from '../pages/patient';
 import Profile from '../pages/profile';
-import Schedules from '../pages/schedules';
-import Timetable from '../pages/timetable';
+import Schedules from '../pages/timetable';
+import Timetable from '../pages/schedule';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const AppRouter = () => {

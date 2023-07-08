@@ -62,7 +62,7 @@ const Doctor = () => {
           <tbody>
             {
               dataIni.map((item: any, index: number) => (
-                <tr key={ index } onClick={ () => editRow(item.Id) }>
+                <tr key={ index } onClick={ () => editRow(item.Usuarios_Medicos_Id_UsuarioToUsuarios.Id) }>
                   <td className="text-center">{ item.Id }</td>
                   <td className="text-center">{ item.Usuarios_Medicos_Id_UsuarioToUsuarios.Nombres }</td>
                   <td className="text-center">{ item.Usuarios_Medicos_Id_UsuarioToUsuarios.Apellido_Paterno }</td>

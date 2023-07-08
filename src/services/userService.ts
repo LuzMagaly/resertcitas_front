@@ -11,7 +11,7 @@ export const getUserById = async (userId: number) => {
         Id: userId
     }
     const result = await invoke('/user/getOne', payload, true)
-return apiControl(result)
+    return apiControl(result)
 }
 
 export const getUserByDNI = async (Dni: string) => {

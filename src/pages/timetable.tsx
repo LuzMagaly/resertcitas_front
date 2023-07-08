@@ -1,204 +1,202 @@
-import { Fragment, useEffect, useState } from "react"
-import { Container, Button, Form, Row, Col, Tabs, Tab } from "react-bootstrap"
-import { getSpecialtyAll } from "../services/specialtyService"
-import { days } from "../constants/date"
-import { getTimetableBySpecialty } from "../services/timetableService"
-import { getScheduleBySpecialty, saveSchedule } from "../services/scheduleService"
-import Consultations from "./tables/consultations"
+import { Button, Container, Form } from "react-bootstrap"
+import TitleCard from "./cards/titleCard"
+import ColumnCard from "./cards/columnCard"
+import ContentCard from "./cards/contentCard"
+import { Fragment, useContext, useEffect, useState } from "react"
+import Confirm from "../components/confirm"
+import Message from "../components/message"
+import Proccessing from "../components/proccessing"
+import { getTimetableByDoctor, saveTimetable } from "../services/timetableService"
+import { getOfficeBySpecialty } from "../services/officeService"
+import { days, hours } from "../constants/date"
+import { AuthContext } from "../providers/authContext"
+import { getDoctorByUser } from "../services/doctorService"
 
+const Timetable = () => {
 
-type childrenProps = {
+  //Obtener desde la sesion
+  const { session } = useContext(AuthContext)
+  const [idDoctor, setIdDoctor] = useState(0)
 
-}
-
-const Timetable = ({}: childrenProps) => {
-
-  //#region [ VARIABLES ]
+  const [confirm, setConfirm] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState(false)
+  const [visibility, setVisibility] = useState(true)
 
   const daysWeek = days
-  const [rows, setRows] = useState<any[]>([])
-  const [listSpecialties, setListSpecialties] = useState<any[]>([])
-  const [currentDate, setCurrentDate] = useState<string>(new Date().toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2'))
-  const [selectedSpecialty, setSelectedSpecialty] = useState<any>(0)
+  const standarHours = hours
+  const [selectedHours, setSelectedHours] = useState<any[]>([])
+  const [offices, setOffices] = useState<any[]>([])
+  const [selectedOffice, setSelectedOffice] = useState<any>()
 
+  useEffect(() => {
+    getDoctor()
+  }, [])
 
-  //#endregion
-
-  //#region [ EFFECTS ]
-
-    useEffect(() => {
-      getAllSpecialties()
-    }, [])
-
-    useEffect(() => {
-      if(listSpecialties && listSpecialties.length && listSpecialties.length > 0){
-        getRows()
-      }
-    }, [currentDate, listSpecialties])
-
-  //#endregion
-
-  //#region [ METHODS ]
-
-    const getAllSpecialties = async () => {
-      const result = await getSpecialtyAll()
-      if(result && result.length && result.length > 0){
-        result.splice(0, 1)
-        setListSpecialties(result)
-      }
+  const getRows = async (id_doctor: any = null) => {
+    const result: any = await getTimetableByDoctor(id_doctor ? id_doctor : idDoctor)
+    if(result && result.length && result.length > 0){
+      setSelectedHours(formatArray(result))
     }
+  }
 
-    const getRows = async () => {
-      const id_specialty: number[] = selectedSpecialty != 0 ? [parseInt(selectedSpecialty)] : listSpecialties.map((item: any) => item.Id)
-      const date = new Date(currentDate)
+  const getOffices = async (especialidad_id: any) => {
+    const result = await getOfficeBySpecialty(especialidad_id.toString())
+    if(result && result.length && result.length > 0){
+      setOffices(result)
+      setSelectedOffice(result[0].Id)
+    }
+  }
+
+  const getDoctor = async () => {
+    const filters = {
+      Nombres: '',
+      Apellido_Paterno: '',
+      Apellido_Materno: '',
+      DNI: session.DNI
+    }
+    const result: any = await getDoctorByUser(filters)
+    if(result && result.length && result.length > 0){
+      const doctor_getted = result[0].Id
+      setIdDoctor(doctor_getted)
+      getOffices(result[0].Especialidades.Id)
+      getRows(doctor_getted)
+    }
+    else{
+      setVisibility(false)
+    }
+  }
+
+  const formatArray = (data: any[]): any[] => {
+    const returnData: any[] = []
+    data.map((item: any) => {
+      const date = new Date(item.Hora_Inicio)
+      const newItem = {
+        hora: `${ date.getHours() < 10 ? '0' : '' }${ date.getHours() }:00`,
+        dia: item.Dia_Nombre
+      }
+      returnData.push(newItem)
+    })
+    return returnData
+  }
+
+  const selectHour = (item: string, element: string) => {
+    let existsHours = selectedHours
+    const exists = existsHours.findIndex((_) => _.hora == item && _.dia == element)
+    if(exists == -1){
+      const value = {
+        hora: item,
+        dia: element
+      }
+      existsHours.push(value)
+    }
+    else{
+      existsHours.splice(exists, 1)
+    }
+    setSelectedHours(existsHours)
+  }
+
+  const getSelected = (hora: string, dia: string) => {
+    const result = selectedHours.find((item: any) => item.dia == dia && item.hora == hora)
+    return result? true: false
+  }
+
+  const saveRows = () => {
+    if(selectedHours && selectedHours.length && selectedHours.length > 0 && selectedOffice){
+    setConfirm(true)
+    }
+  }
+
+  const sendRowsToDatabase = async () => {
+    setConfirm(false)
+    setLoading(true)
+    const payload_items: any[] = []
+
+    selectedHours.map((item: any) => {
       const payload = {
-        Id: id_specialty,
-        Fecha: date
+        Id_Medico: idDoctor,
+        Hora_Inicio: new Date("01-01-2020 " + item.hora + ":00"),
+        Hora_Fin: new Date("01-01-2020 " + item.hora.replace('00', '59') + ":00"),
+        Dia_Nombre: item.dia,
+        Estado: selectedOffice.toString(),
       }
-      console.log(payload)
-      const result = await getScheduleBySpecialty(payload)
-      console.log(result)
-      if(result && result.length && result.length > 0){
-        setRows(result)
-      }
+      payload_items.push(payload)
+    })
+    const result = await saveTimetable(payload_items)
+    setLoading(false)
+    if(result){
+      getRows()
     }
+  }
 
-    const getTimes = async () => {
-      const id_specialty: number[] = selectedSpecialty != 0 ? [parseInt(selectedSpecialty)] : listSpecialties.map((item: any) => item.Id)
-      const dayWeekSelected = daysWeek[new Date(currentDate).getDay()]
-      const payload = {
-        Id: id_specialty,
-        Day: dayWeekSelected
-      }
-      return await getTimetableBySpecialty(payload)
+  const handleChangeOffice = (event: any) => {
+    const value = event.target.value
+    if(value){
+      setSelectedOffice(value)
     }
+  }
 
-    const generateCalendar = async () => {
-      const times = await getTimes()
-      if(!(times && times.length && times.length > 0)){
-        return
-      }
-
-      const items: any[] = []
-      times.map((element: any) => {
-        const item = {
-          Id_Consultorio: parseInt(element.Estado),
-          Id_Medico: element.Id_Medico,
-          Hora_Inicio: element.Hora_Inicio,
-          Hora_Fin: element.Hora_Fin,
-          Turno: new Date(element.Hora_Inicio).getHours() <= 12 ? 'Mañana' : 'Tarde',
-          Fecha: new Date(currentDate).toISOString(),
-          Estado: 'ACTIVO',
-        }
-        items.push(item)
-      })
-
-      const payload = {
-        Items: items
-      }
-      const result = await saveSchedule(payload)
-      if(result){
-        getRows()
-      }
-    }
-
-  //#endregion
-
-  //#region [ EVENTS ]
-
-    const handleChangeDate = (event: any) => {
-      setCurrentDate(event.target.value)
-    }
-
-    const handleChangeSpecialty = (event: any) => {
-      const value = event.target.value
-      if(value){
-        setSelectedSpecialty(value)
-      }
-    }
-
-    const getBySpecialty = (id: number) => {
-      const result = rows.filter((item: any) => item.Medicos.Id_Especialidad == id)
-      if(result && result.length && result.length > 0){
-        return result
-      }
-      else{
-        return []
-      }
-    }
-
-  //#endregion
-
-  //#region [ PROPERTIES ]
-
-  //#endregion
-
-  //#region [ RENDER ]
-
-    return (
-      <Fragment>
-        <Container fluid>
-          <div className="d-flex bd-highlight mb-3">
-            <div className="me-auto p-2 bd-highlight">
-              <h1>Calendario</h1>
+  return (
+    <Fragment>
+      {
+        visibility ?
+          <Container>
+            <div className="d-flex">
+              <div className="me-auto p-0">
+                <h1>Mi Horario</h1>
+              </div>
+              <div className="p-1">
+                <Form.Select onChange={ handleChangeOffice } value={ selectedOffice }>
+                  {
+                    offices.map((item: any, index: number) =>
+                      <option key={ index } value={ item.Id }>{ item.Nombre }</option>
+                    )
+                  }
+                </Form.Select>
+              </div>
+              <div className="p-1">
+                <Button variant="success" onClick={ saveRows }>Guardar cambios</Button>
+              </div>
             </div>
-            <div className="p-2 bd-highlight">
+            <hr/>
+            <div className="d-flex flex-row">
+              <div className="p-0 m-1" style={{ width: '15rem' }}></div>
+              {
+                daysWeek.map((day: any, index: number) =>
+                  <TitleCard key={ index } title={ day }/>
+                )
+              }
             </div>
-          </div>
-          <hr/>
-
-          <Form>
-            <Row>
-              {/* <Col sm="3">
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                  <Form.Label>Especialidad</Form.Label>
-                  <Form.Select value={ selectedSpecialty } onChange={ handleChangeSpecialty }>
-                    <option value={ 0 }>Todos</option>
+              {
+                standarHours.map((item: any, index: number) =>
+                  <div  key={ index } className="d-flex flex-row">
+                    <ColumnCard hour={ item }/>
                     {
-                      listSpecialties.map((item: any, index: number) =>
-                        <option key={ index } value={ item.Id }>{ item.Nombre }</option>
+                      daysWeek.map((element: any, index: number) =>
+                        <ContentCard key={ index } onClick={ () => selectHour(item, element) } selected={ getSelected(item, element) }/>
                       )
                     }
-                  </Form.Select>
-                </Form.Group>
-              </Col> */}
-              <Col sm="2">
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                  <Form.Label>Fecha</Form.Label>
-                  <Form.Control type="date" value={ currentDate } onChange={ handleChangeDate } />
-                </Form.Group>
-              </Col>
-              {
-                (!rows || rows.length == 0) &&
-                  <Col sm="1">
-                    <div className="mt-4 p-2">
-                      <Button variant="primary" onClick={ generateCalendar }>Generar</Button>{' '}
-                    </div>
-                  </Col>
+                  </div>
+                )
               }
-            </Row>
-
-
-          </Form>
-
-
-          <Tabs defaultActiveKey="profile" className="mb-3">
-            {
-              listSpecialties.map((item: any, index: number) =>
-                <Tab key={ index } eventKey={ item.Id } title={ item.Nombre }>
-                  <Consultations dataList={ getBySpecialty(item.Id) } />
-                </Tab>
-              )
-            }
-          </Tabs>
-
-        </Container>
-
-      </Fragment>
-    )
-
-  //#endregion
-
+          </Container>
+        :
+        <span>No tienes acceso a esta página</span>
+      }
+      {
+        !!confirm &&
+          <Confirm show={ confirm } handleClose={ () => setConfirm(false) } action={ sendRowsToDatabase } title="Confirmación de guardado" message="Esta operación puede tardar algunos segundos, ¿Desea continuar?"/>
+      }
+      {
+        !!loading &&
+          <Proccessing show={ loading } title="Ejecutando operación" message="No salga de esta página por favor"/>
+      }
+      {
+        !!message &&
+          <Message show={ message } handleClose={ () => setMessage(false) } title="Error de conexión" message="La operación no pudo completarse con exito, por favor vuelva a intentarlo"/>
+      }
+    </Fragment>
+  )
 }
 
 export default Timetable

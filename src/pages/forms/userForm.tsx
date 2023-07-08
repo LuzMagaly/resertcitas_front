@@ -4,16 +4,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { AuthContext } from '../../providers/authContext'
 import Confirm from "../../components/confirm"
-import { createUser } from '../../services/userService'
+import { createUser, getUserByDNI } from '../../services/userService'
 import { updateUser } from '../../services/userService'
-import { updatePassword } from '../../services/userService'
 
 const UserForm = ({ data, onEventSave, callbackResponse, typeUser }: { data: any, onEventSave: number, callbackResponse?: any, typeUser?: any }) => {
 
     //#region [ VARIABLES ]
         const { session } = useContext(AuthContext)
         const [show, setShow] = useState(false)
-        const [statusRow, setStatusRow] = useState(0) //status: 0 is new, 1 is update
 
         const [DNI, setDNI] = useState<any>({ value: '', state: 0, message: '' })
         const [Nombres, setNombres] = useState<any>({ value: '', state: 0, message: '' })
@@ -46,53 +44,46 @@ const UserForm = ({ data, onEventSave, callbackResponse, typeUser }: { data: any
             if(!data){
                 return
             }
-            setStatusRow(1)
-            setDNI({ value: data.DNI, state: 0, message: '' })
-            setNombres({ value: data.Nombres, state: 0, message: '' })
-            setApellido_Paterno({ value: data.Apellido_Paterno, state: 0, message: '' })
-            setApellido_Materno({ value: data.Apellido_Materno, state: 0, message: '' })
-            setFecha_Nacimiento({ value: (new Date(data.Fecha_Nacimiento).toISOString().split('T')[0]), state: 0, message: '' })
-            setDireccion({ value: data.Direccion, state: 0, message: '' })
-            setTelefono({ value: data.Telefono, state: 0, message: '' })
-            setCorreo({ value: data.Correo, state: 0, message: '' })
-            setSexo({ value: data.Sexo, state: 0, message: '' })
+            setDNI({ value: data.DNI, state: 1, message: '' })
+            setNombres({ value: data.Nombres, state: 1, message: '' })
+            setApellido_Paterno({ value: data.Apellido_Paterno, state: 1, message: '' })
+            setApellido_Materno({ value: data.Apellido_Materno, state: 1, message: '' })
+            setFecha_Nacimiento({ value: (new Date(data.Fecha_Nacimiento).toISOString().split('T')[0]), state: 1, message: '' })
+            setDireccion({ value: data.Direccion, state: 1, message: '' })
+            setTelefono({ value: data.Telefono, state: 1, message: '' })
+            setCorreo({ value: data.Correo, state: 1, message: '' })
+            setSexo({ value: data.Sexo, state: 1, message: '' })
         }
 
-        //default method to init
         const saveUser = async() => {
-
-            if(DNI.value == '' || Nombres.value == '' || Apellido_Paterno.value == '' || Apellido_Materno.value == '' || Fecha_Nacimiento.value == '' || Direccion.value == '' || Telefono.value == '' || Correo.value == '' || Sexo.value == 'Seleccionar'){
+            if(
+                DNI.state == 2 ||
+                Nombres.state == 2 ||
+                Apellido_Paterno.state == 2 ||
+                Apellido_Materno.state == 2 ||
+                Fecha_Nacimiento.state == 2 ||
+                Direccion.state == 2 ||
+                Telefono.state == 2 ||
+                Correo.state == 2 ||
+                Sexo.value == 'Seleccionar'
+            ){
                 return
             }
             handleToggleConfirm()
         }
 
         const sendData = async() => {
-            let role = 1
-            if(typeUser){
-                if(typeUser == 'médico'){
-                    role = 2
-                }
-                else{
-                    role = 1
-                }
-            }
-            else{
-                if(data){
-                    role = data.Id_Rol
-                }
-                else {
-                    role = 1
-                }
-            }
+            const birth = new Date(Fecha_Nacimiento.value)
+            birth.setDate(birth.getDate() + 1)
+
             const payload: any = {
                 Item: {
-                    Id_Rol: role,
+                    Id_Rol: 2, //default role is user
                     DNI: DNI.value,
                     Nombres: Nombres.value,
                     Apellido_Paterno: Apellido_Paterno.value,
                     Apellido_Materno: Apellido_Materno.value,
-                    Fecha_Nacimiento: Fecha_Nacimiento.value,
+                    Fecha_Nacimiento: birth,
                     Direccion: Direccion.value,
                     Telefono: Telefono.value,
                     Correo: Correo.value,
@@ -102,13 +93,14 @@ const UserForm = ({ data, onEventSave, callbackResponse, typeUser }: { data: any
                 }
             }
             let result: any;
-            if(statusRow == 0){
+            if(!data){
                 payload.Item.Contrasenia = payload.Item.DNI //default pass
                 payload.Item.Creado_Por = session.Id
                 result = await createUser(payload)
             }
-            if (statusRow == 1){
+            else{
                 payload.Item.Id = data.Id
+                payload.Item.Id_Rol = data.Id_Rol ? data.Id_Rol : 2
                 payload.Item.Actualizado_Por = session.Id
                 result = await updateUser(payload)
             }
@@ -116,6 +108,13 @@ const UserForm = ({ data, onEventSave, callbackResponse, typeUser }: { data: any
                 callbackResponse(result)
             }
             handleToggleConfirm()
+        }
+
+        const findPerson = async (value: string) => {
+            const result = await getUserByDNI(value)
+            if(result && result.length && result.length > 0){
+                setDNI({ value: DNI.value, state: 2, message: 'Este Dni ya está registrado' })
+            }
         }
 
     //#endregion
@@ -198,6 +197,17 @@ const UserForm = ({ data, onEventSave, callbackResponse, typeUser }: { data: any
             setSexo({ value: _value, state: 1, message: '' })
         }
 
+        const onBlurDNI = (event: any) => {
+            const value = event.target.value
+            if(value.length < 8){
+                setDNI({ value: DNI.value, state: 2, message: 'El Dni debe tener 8 dígitos' })
+                return
+            }
+            if(!(data && data.DNI && data.DNI == value)){
+                findPerson(value)
+            }
+        }
+
     //#endregion
 
   return (
@@ -221,13 +231,25 @@ const UserForm = ({ data, onEventSave, callbackResponse, typeUser }: { data: any
             <Col sm="8">
                 <Form.Group className="mb-3" >
                     <Form.Label>Nombres</Form.Label>
-                    <Form.Control isInvalid={ Nombres.value.length == 0 ? true : false } isValid={ Nombres.value.length > 2 ? true : false } value={ Nombres.value } onChange={ handleChangeNombres } type="text" placeholder="Ingrese sus nombres completos" autoFocus />
+                    <Form.Control isInvalid={ Nombres.state == 2 ? true : false } isValid={ Nombres.state == 1 ? true : false } value={ Nombres.value } onChange={ handleChangeNombres } type="text" placeholder="Ingrese sus nombres completos" autoFocus />
                 </Form.Group>
+                {
+                    Nombres.state === 2 &&
+                    <Form.Text className="text-danger">
+                        { Nombres.message }
+                    </Form.Text>
+                }
             </Col>
             <Col sm="4">
                 <Form.Group className="mb-3">
                     <Form.Label>DNI</Form.Label>
-                    <Form.Control isInvalid={ DNI.value.length == 0 ? true : false } isValid={ DNI.value.length > 7 ? true : false } value={ DNI.value } onChange={ handleChangeDNI } type="number" placeholder="XXXXXXXX" />
+                    <Form.Control onBlur={ onBlurDNI } isInvalid={ DNI.state == 2 ? true : false } isValid={ DNI.state == 1 ? true : false } value={ DNI.value } onChange={ handleChangeDNI } type="number" placeholder="XXXXXXXX" />
+                    {
+                        DNI.state === 2 &&
+                        <Form.Text className="text-danger">
+                          { DNI.message }
+                        </Form.Text>
+                    }
                 </Form.Group>
             </Col>
         </Row>
@@ -236,13 +258,25 @@ const UserForm = ({ data, onEventSave, callbackResponse, typeUser }: { data: any
             <Col sm="6">
                 <Form.Group className="mb-3">
                     <Form.Label>Apellido paterno</Form.Label>
-                    <Form.Control isInvalid={ Apellido_Paterno.value.length == 0 ? true : false } isValid={ Apellido_Paterno.value.length > 2 ? true : false } value={ Apellido_Paterno.value } onChange={ handleChangeApellido_Paterno } type="text" placeholder="Ingrese su apellido paterno" />
+                    <Form.Control isInvalid={ Apellido_Paterno.state == 2 ? true : false } isValid={ Apellido_Paterno.state == 1 ? true : false } value={ Apellido_Paterno.value } onChange={ handleChangeApellido_Paterno } type="text" placeholder="Ingrese su apellido paterno" />
+                    {
+                        Apellido_Paterno.state === 2 &&
+                        <Form.Text className="text-danger">
+                          { Apellido_Paterno.message }
+                        </Form.Text>
+                    }
                 </Form.Group>
             </Col>
             <Col sm="6">
                 <Form.Group className="mb-3">
                     <Form.Label>Apellido materno</Form.Label>
-                    <Form.Control isInvalid={ Apellido_Materno.value.length == 0 ? true : false } isValid={ Apellido_Materno.value.length > 2 ? true : false } value={ Apellido_Materno.value } onChange={ handleChangeApellido_Materno } type="text" placeholder="Ingrese su apellido materno" />
+                    <Form.Control isInvalid={ Apellido_Materno.state == 2 ? true : false } isValid={ Apellido_Materno.state == 1 ? true : false } value={ Apellido_Materno.value } onChange={ handleChangeApellido_Materno } type="text" placeholder="Ingrese su apellido materno" />
+                    {
+                        Apellido_Materno.state === 2 &&
+                        <Form.Text className="text-danger">
+                          { Apellido_Materno.message }
+                        </Form.Text>
+                    }
                 </Form.Group>
             </Col>
         </Row>
@@ -251,7 +285,13 @@ const UserForm = ({ data, onEventSave, callbackResponse, typeUser }: { data: any
             <Col sm="8">
                 <Form.Group className="mb-3">
                     <Form.Label>Fecha de nacimiento</Form.Label>
-                    <Form.Control isInvalid={ Fecha_Nacimiento.value.length == 0 ? true : false } isValid={ Fecha_Nacimiento.value.length > 0 ? true : false } value={ Fecha_Nacimiento.value } onChange={ handleChangeFecha_Nacimiento } type="date" placeholder="DD/MM/YYYY" />
+                    <Form.Control isInvalid={ Fecha_Nacimiento.state == 2 ? true : false } isValid={ Fecha_Nacimiento.state == 1 ? true : false } value={ Fecha_Nacimiento.value } onChange={ handleChangeFecha_Nacimiento } type="date" placeholder="DD/MM/YYYY" />
+                    {
+                        Fecha_Nacimiento.state === 2 &&
+                        <Form.Text className="text-danger">
+                          { Fecha_Nacimiento.message }
+                        </Form.Text>
+                    }
                 </Form.Group>
             </Col>
             <Col sm="4">
@@ -262,6 +302,12 @@ const UserForm = ({ data, onEventSave, callbackResponse, typeUser }: { data: any
                         <option value="M">Masculino</option>
                         <option value="F">Femenino</option>
                     </Form.Select>
+                    {
+                        Sexo.state === 2 &&
+                        <Form.Text className="text-danger">
+                          { Sexo.message }
+                        </Form.Text>
+                    }
                 </Form.Group>
             </Col>
         </Row>
@@ -270,20 +316,38 @@ const UserForm = ({ data, onEventSave, callbackResponse, typeUser }: { data: any
             <Col sm="8">
                 <Form.Group className="mb-3">
                     <Form.Label>Correo electrónico</Form.Label>
-                    <Form.Control isInvalid={ Correo.value.length == 0 ? true : false } isValid={ Correo.value.length > 0 ? true : false } value={ Correo.value } onChange={ handleChangeCorreo } type="email" placeholder="mi_email@email.com" />
+                    <Form.Control isInvalid={ Correo.state == 2 ? true : false } isValid={ Correo.state == 1 ? true : false } value={ Correo.value } onChange={ handleChangeCorreo } type="email" placeholder="mi_email@email.com" />
+                    {
+                        Correo.state === 2 &&
+                        <Form.Text className="text-danger">
+                          { Correo.message }
+                        </Form.Text>
+                    }
                 </Form.Group>
             </Col>
             <Col sm="4">
                 <Form.Group className="mb-3">
                     <Form.Label>Teléfono</Form.Label>
-                    <Form.Control isInvalid={ Telefono.value.length == 0 ? true : false } isValid={ Telefono.value.length > 0 ? true : false } value={ Telefono.value } onChange={ handleChangeTelefono } type="text" placeholder="xxx xxx xxx" />
+                    <Form.Control isInvalid={ Telefono.state == 2 ? true : false } isValid={ Telefono.state == 1 ? true : false } value={ Telefono.value } onChange={ handleChangeTelefono } type="text" placeholder="xxx xxx xxx" />
+                    {
+                        Telefono.state === 2 &&
+                        <Form.Text className="text-danger">
+                          { Telefono.message }
+                        </Form.Text>
+                    }
                 </Form.Group>
             </Col>
         </Row>
 
         <Form.Group className="mb-3">
             <Form.Label>Dirección</Form.Label>
-            <Form.Control isInvalid={ Direccion.value.length == 0 ? true : false } isValid={ Direccion.value.length > 0 ? true : false } value={ Direccion.value } onChange={ handleChangeDireccion } type="text" placeholder="Ingrese su dirección" />
+            <Form.Control isInvalid={ Direccion.state == 2 ? true : false } isValid={ Direccion.state == 1 ? true : false } value={ Direccion.value } onChange={ handleChangeDireccion } type="text" placeholder="Ingrese su dirección" />
+            {
+                Direccion.state === 2 &&
+                <Form.Text className="text-danger">
+                    { Direccion.message }
+                </Form.Text>
+            }
         </Form.Group>
 
         <br/>

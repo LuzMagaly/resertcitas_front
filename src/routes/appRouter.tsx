@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 import { Sidebar } from 'components/layout/sidebar';
@@ -13,11 +13,14 @@ import { Profile } from 'pages/persons/profile';
 import { Schedule } from 'pages/medical/schedule';
 import { Timetable } from 'pages/medical/timetable';
 import { useLocalStorage } from 'hooks/useLocalStorage';
+import { routes } from './paths';
+import { Permisions } from 'pages/auth/permisions';
+import { AuthContext } from 'providers/authContext';
 
 const AppRouter = () => {
 
+  const { session } = useContext(AuthContext)
   const { getItem, setItem, keySidebar } = useLocalStorage()
-
   const [isOpen, setIsOpen] = useState<boolean>(getItem(keySidebar) == '1'? true : false)
 
   const toggle = () => {
@@ -25,20 +28,23 @@ const AppRouter = () => {
     setItem(keySidebar, !isOpen? '1' : '0')
   }
 
+  console.log(session)
+
   return (
     <BrowserRouter>
       <div className="App wrapper">
           <Sidebar toggle={ toggle } isOpen={ isOpen } />
           <Content toggle={ toggle } isOpen={ isOpen } children={
             <Routes>
-              <Route path="/" element={ <Home/> } />
-              <Route path="/appointment" element={ <Appointment/> } />
-              <Route path="/doctor" element={ <Doctor/> } />
-              <Route path="/patient" element={ <Patient/> } />
-              <Route path="/profile" element={ <Profile/> } />
-              <Route path="/schedules" element={ <Schedule/> } />
-              <Route path="/timetable" element={ <Timetable/> } />
-              <Route path="*" element={ <Error/> } />
+              <Route path={ routes.home } element={ <Home/> } />
+              <Route path={ routes.appointment } element={ <Appointment/> } />
+              <Route path={ routes.doctor } element={ <Doctor/> } />
+              <Route path={ routes.patient } element={ <Patient/> } />
+              <Route path={ routes.profile } element={ <Profile/> } />
+              <Route path={ routes.schedules } element={ <Schedule/> } />
+              <Route path={ routes.timetable } element={ <Timetable/> } />
+              <Route path={ routes.permisions } element={ <Permisions/> } />
+              <Route path={ routes.error } element={ <Error/> } />
             </Routes>
            }/>
         </div>

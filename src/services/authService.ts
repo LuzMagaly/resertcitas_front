@@ -29,3 +29,11 @@ export const verifyEmail = async (email: string) => {
   const result = await invoke('/auth/verifyEmail', payload, false)
   return apiControl(result)
 }
+
+export const updatePassword = async (payload: any) => {
+  const result = await invoke('/auth/updatePassword', payload, false)
+  if(result && result.data){
+      return result.data
+  }
+  return null
+}

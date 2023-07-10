@@ -13,7 +13,7 @@ import { usePermision } from 'hooks/usePermision'
 
 //#endregion
 
-const Permisions = () => {
+export const Permisions = () => {
 
   const { verify } = usePermision()
 
@@ -157,5 +157,3 @@ const Permisions = () => {
     </Fragment>
   )
 }
-
-export default Permisions

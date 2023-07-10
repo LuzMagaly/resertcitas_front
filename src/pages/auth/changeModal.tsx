@@ -6,6 +6,7 @@ import { AuthContext } from "../../providers/authContext"
 //import { updatePassword } from "../services/authService"
 import { Proccessing } from "components/alerts/proccessing"
 import { Alert } from "components/alerts/alert"
+import { updatePassword } from "services/authService"
 
 export const ChangeModal = ({ show, handleClose }: { show: boolean, handleClose: any }) => {
 
@@ -26,16 +27,16 @@ export const ChangeModal = ({ show, handleClose }: { show: boolean, handleClose:
         if(pass1State == 1 && pass2State == 1){
             setProccessing(true)
             const payload = {
-                "user": session.pkid.toString(),
-                "pass": pass1,
-                "keep": true
-              }
-            const result = null//await updatePassword(payload)
+                Item: {
+                    "Id": session.Id.toString(),
+                    "Contrasenia": pass1,
+                }
+            }
+            const result = await updatePassword(payload)
             setProccessing(false)
             if(result){
                 setAlert(true)
             }
-
         }
     }
 

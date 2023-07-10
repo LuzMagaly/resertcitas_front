@@ -2,6 +2,7 @@ export const useLocalStorage = () => {
 
   const keySidebar = '0ALVWOLTZt8wiA3tccEh'
   const keySession = 'Nxe4XmCpiWH9xP8bJoZ9'
+  const keyData = 'sFr37ht5F7ksaf8h5Ht62D'
 
   const setItem = (key: string, value: string) => {
     localStorage.setItem(key, window.btoa(JSON.stringify(value)))
@@ -19,5 +20,5 @@ export const useLocalStorage = () => {
     localStorage.removeItem(key)
   }
 
-  return { setItem, getItem, removeItem, keySidebar, keySession }
+  return { setItem, getItem, removeItem, keySidebar, keySession, keyData }
 }

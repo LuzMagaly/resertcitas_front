@@ -1,7 +1,7 @@
 import { useState, useEffect, createContext, Dispatch, SetStateAction } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
-import Login from '../pages/login'
-import Loader from '../pages/loader'
+import { Login } from 'pages/auth/login'
+import { Loader } from 'pages/common/loader'
 //guardadatos sesi
 //
 interface IAuthContext {

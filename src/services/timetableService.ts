@@ -1,5 +1,5 @@
-import { apiControl } from "../errors/apiControl"
-import { invoke } from "../server/api"
+import { apiControl } from "errors/apiControl"
+import { invoke } from "server/api"
 
 export const getTimetableById = async (id: number) => {
     const payload = {
@@ -19,6 +19,11 @@ export const getTimetableByDoctor = async (id: number) => {
 
 export const getTimetableBySpecialty = async (payload: any) => {
     const result = await invoke('/timetable/getBySpecialty', payload, true)
+    return apiControl(result)
+}
+
+export const getTimetableBySpecialtyWidthDoctor = async (payload: any) => {
+    const result = await invoke('/timetable/getBySpecialtyWidthDoctor', payload, true)
     return apiControl(result)
 }
 

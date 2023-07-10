@@ -1,5 +1,5 @@
-import { apiControl } from "../errors/apiControl"
-import { invoke } from "../server/api"
+import { apiControl } from "errors/apiControl"
+import { invoke } from "server/api"
 
 export const getPatientAll = async () => {
     const result = await invoke('/patient/getAll', {}, true)

@@ -1,7 +1,7 @@
-import { apiControl } from "../errors/apiControl"
-import { EncryptRSA } from '../hooks/useEncrypt'
-import { useLocalStorage } from "../hooks/useLocalStorage"
-import { invoke } from "../server/api"
+import { EncryptRSA } from 'hooks/useEncrypt'
+import { useLocalStorage } from "hooks/useLocalStorage"
+import { apiControl } from "errors/apiControl"
+import { invoke } from "server/api"
 
 export const Authenticate = async (username: string, password: string, keepSessionOpen: boolean) => {
     const { setItem, keySession } = useLocalStorage()

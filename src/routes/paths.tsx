@@ -7,6 +7,7 @@ export const routes = {
     schedules: 'schedules',
     timetable: 'timetable',
     permisions: 'permisions',
+    users: 'users',
     error: '*'
 
 }

@@ -16,6 +16,7 @@ import { useLocalStorage } from 'hooks/useLocalStorage';
 import { routes } from './paths';
 import { Permisions } from 'pages/auth/permisions';
 import { AuthContext } from 'providers/authContext';
+import Users from 'pages/auth/users';
 
 const AppRouter = () => {
 
@@ -27,8 +28,6 @@ const AppRouter = () => {
     setIsOpen(!isOpen)
     setItem(keySidebar, !isOpen? '1' : '0')
   }
-
-  console.log(session)
 
   return (
     <BrowserRouter>
@@ -44,6 +43,7 @@ const AppRouter = () => {
               <Route path={ routes.schedules } element={ <Schedule/> } />
               <Route path={ routes.timetable } element={ <Timetable/> } />
               <Route path={ routes.permisions } element={ <Permisions/> } />
+              <Route path={ routes.users } element={ <Users/> } />
               <Route path={ routes.error } element={ <Error/> } />
             </Routes>
            }/>

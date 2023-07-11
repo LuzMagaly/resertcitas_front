@@ -1,7 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faHome, faUserCircle, faTimes, faUserDoctor, faWheelchair, faClipboardList, faCalendarWeek, faClock, faCoins } from "@fortawesome/free-solid-svg-icons"
+import { faHome, faUserCircle, faTimes, faUserDoctor, faWheelchair, faClipboardList, faCalendarWeek, faClock, faCoins, faShieldHalved, faPeopleArrows } from "@fortawesome/free-solid-svg-icons"
 import { Nav, Button } from "react-bootstrap"
 import { Link, useLocation } from "react-router-dom"
+import { routes } from 'routes/paths'
 
 export const Sidebar = ({ toggle, isOpen }: { toggle: any, isOpen: any }) => {
 
@@ -24,52 +25,66 @@ export const Sidebar = ({ toggle, isOpen }: { toggle: any, isOpen: any }) => {
         <Nav className="flex-column pt-2">
           <p style={{paddingLeft: '15px'}}>Heading</p>
 
-          <Link to="/">
-            <Nav.Item className={ 'itembar ' + (location.pathname === '/'? 'active' : '') } style={{ padding: '7px 0px 7px 20px' }}>
+          <Link to={ routes.home }>
+            <Nav.Item className={ 'itembar ' + (location.pathname === `/${ routes.home }`? 'active' : '') } style={{ padding: '7px 0px 7px 20px' }}>
                 <FontAwesomeIcon icon={faHome} style={{paddingRight: '10px'}}/>
                 Inicio
             </Nav.Item>
           </Link>
 
-          <Link to="/profile">
-            <Nav.Item className={ 'itembar ' + (location.pathname === '/profile'? 'active' : '') } style={{ padding: '7px 0px 7px 20px' }}>
+          <Link to={ routes.profile }>
+            <Nav.Item className={ 'itembar ' + (location.pathname === `/${ routes.profile }` ? 'active' : '') } style={{ padding: '7px 0px 7px 20px' }}>
                 <FontAwesomeIcon icon={ faUserCircle } style={{paddingRight: '10px'}}/>
                 Mi Perfil
             </Nav.Item>
           </Link>
 
-          <Link to="/patient">
-            <Nav.Item className={ 'itembar ' + (location.pathname === '/patient'? 'active' : '') } style={{ padding: '7px 0px 7px 20px' }}>
+          <Link to={ routes.patient }>
+            <Nav.Item className={ 'itembar ' + (location.pathname === `/${ routes.patient }` ? 'active' : '') } style={{ padding: '7px 0px 7px 20px' }}>
                 <FontAwesomeIcon icon={ faWheelchair } style={{paddingRight: '10px'}}/>
                 Pacientes
             </Nav.Item>
           </Link>
 
-          <Link to="/doctor">
-            <Nav.Item className={ 'itembar ' + (location.pathname === '/doctor'? 'active' : '') } style={{ padding: '7px 0px 7px 20px' }}>
+          <Link to={ routes.doctor }>
+            <Nav.Item className={ 'itembar ' + (location.pathname === `/${ routes.doctor }` ? 'active' : '') } style={{ padding: '7px 0px 7px 20px' }}>
                 <FontAwesomeIcon icon={ faUserDoctor } style={{paddingRight: '10px'}}/>
                 Médicos
             </Nav.Item>
           </Link>
 
-          <Link to="/timetable">
-            <Nav.Item className={ 'itembar ' + (location.pathname === '/timetable'? 'active' : '') } style={{ padding: '7px 0px 7px 20px' }}>
+          <Link to={ routes.timetable }>
+            <Nav.Item className={ 'itembar ' + (location.pathname === `/${ routes.timetable }` ? 'active' : '') } style={{ padding: '7px 0px 7px 20px' }}>
               <FontAwesomeIcon icon={ faCalendarWeek } style={{paddingRight: '10px'}}/>
-                Mi Horario
+                Horarios
             </Nav.Item>
           </Link>
 
-          <Link to="/schedules">
-            <Nav.Item className={ 'itembar ' + (location.pathname === '/schedules'? 'active' : '') } style={{ padding: '7px 0px 7px 20px' }}>
+          <Link to={ routes.schedules }>
+            <Nav.Item className={ 'itembar ' + (location.pathname === `/${ routes.schedules }` ? 'active' : '') } style={{ padding: '7px 0px 7px 20px' }}>
               <FontAwesomeIcon icon={ faClock } style={{paddingRight: '10px'}}/>
                 Calendario
             </Nav.Item>
           </Link>
 
-          <Link to="/appointment">
-            <Nav.Item className={ 'itembar ' + (location.pathname === '/appointment'? 'active' : '') } style={{ padding: '7px 0px 7px 20px' }}>
+          <Link to={ routes.appointment }>
+            <Nav.Item className={ 'itembar ' + (location.pathname === `/${ routes.appointment }` ? 'active' : '') } style={{ padding: '7px 0px 7px 20px' }}>
                 <FontAwesomeIcon icon={ faClipboardList } style={{paddingRight: '10px'}}/>
                 Citas
+            </Nav.Item>
+          </Link>
+
+          <Link to={ routes.permisions }>
+            <Nav.Item className={ 'itembar ' + (location.pathname === `/${ routes.permisions }` ? 'active' : '') } style={{ padding: '7px 0px 7px 20px' }}>
+                <FontAwesomeIcon icon={ faShieldHalved } style={{paddingRight: '10px'}}/>
+                Permisos
+            </Nav.Item>
+          </Link>
+
+          <Link to={ routes.users }>
+            <Nav.Item className={ 'itembar ' + (location.pathname === `/${ routes.users }` ? 'active' : '') } style={{ padding: '7px 0px 7px 20px' }}>
+                <FontAwesomeIcon icon={ faPeopleArrows } style={{paddingRight: '10px'}}/>
+                Usuarios
             </Nav.Item>
           </Link>
 

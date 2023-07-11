@@ -14,7 +14,7 @@ export const ContentCard = ({ onClick, selected }: { onClick: any, selected: boo
     }
 
     return (
-        <Card onClick={ handleChangeState } className="timetableHours p-1 m-1" style={{ width: '18rem', backgroundColor: check? '#53E575' : '#FFF' }}>
+        <Card onClick={ handleChangeState } className="timetableHours p-1 m-1" style={{ width: '18rem', height: '3rem', backgroundColor: check? '#53E575' : '#FFF' }}>
             <Card.Body>
                 <Card.Title className="text-center"></Card.Title>
             </Card.Body>

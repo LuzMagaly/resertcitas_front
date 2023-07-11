@@ -9,13 +9,10 @@ import { Proccessing } from "components/alerts/proccessing"
 import { PermisionModal } from "pages/auth/permisionModal"
 //import { deleteRol, getPermiso, getRol } from "../services/permisionService"
 import { Alert } from "components/alerts/alert"
-import { usePermision } from 'hooks/usePermision'
 
 //#endregion
 
 export const Permisions = () => {
-
-  const { verify } = usePermision()
 
   const [rows, setRows] = useState<any[]>([])
   const [permisions, setPermisions] = useState<any[]>([])
@@ -26,7 +23,6 @@ export const Permisions = () => {
   const [alertUpdate, setAlertUpdate] = useState<boolean>(false)
 
   useEffect(() => {
-    verify(window.location.href)
     getPermisions()
   }, [])
 

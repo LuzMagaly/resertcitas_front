@@ -8,7 +8,7 @@
     import { CreateModal } from 'pages/home/createModal'
     import { style_specialty } from 'constants/specialties'
     import { url } from "server/api"
-    import { getScheduleBySpecialty } from 'services/scheduleService'
+    import { getScheduleBySpecialty, getScheduleBasicBySpecialty } from 'services/scheduleService'
     import 'styles/specialty.css'
 
 //#endregion
@@ -20,10 +20,10 @@ export const ShowAppointmentsGeneral = () => {
 
         const socket = io(url)
         const [currentDate, setCurrentDate] = useState<string>(new Date().toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2'))
-        const [schedules, setSchedules] = useState<[]>([])
         const [rowsSpecialty, setRowsSpecialty] = useState<any[]>([])
         const [loading, setLoading] = useState(false)
         const [showCreate, setShowCreate] = useState(false)
+        const [params, setParams] = useState<any>(null)
         const styles_specialties = style_specialty
     
     //#endregion
@@ -43,9 +43,9 @@ export const ShowAppointmentsGeneral = () => {
             //console.log('Event reader from server!')
             //console.log(message)
         })
-    
-    //#endregion    
-    
+
+    //#endregion
+
     //#region [ FUNCTIONS ]
 
         const getRows = async () => {
@@ -57,33 +57,18 @@ export const ShowAppointmentsGeneral = () => {
                 Fecha: date
             }
             setLoading(true)
-            const result = await getScheduleBySpecialty(payload)
+            const result = await getScheduleBasicBySpecialty(payload)
             setLoading(false)
-            console.log(result)
             loadSchedules(result)
         }
-        
+
         const loadSchedules = async (result: any) => {
             if(result && result.length && result.length > 0){
-                extractSpecialtiesFromRows(result)
-                setSchedules(result)
+                setRowsSpecialty(result)
             }
             else{
                 setRowsSpecialty([])
-                setSchedules([])
             }
-        }
-
-        const extractSpecialtiesFromRows = (items: any[]) => {
-            const tempSpecialties: any[] = items.map((item: any) => {
-            return {
-                Id: item.Medicos.Id_Especialidad,
-                Nombre: item.Medicos.Especialidades.Nombre,
-                Descripcion: item.Medicos.Especialidades.Descripcion
-            }
-            })
-            const specialtiesDistinct = tempSpecialties.filter((n: any, i: any) => tempSpecialties.findIndex((item: any) => item.Id == n.Id) === i)
-            setRowsSpecialty(specialtiesDistinct)
         }
 
     //#endregion
@@ -93,14 +78,19 @@ export const ShowAppointmentsGeneral = () => {
         const handleChangeDate = (event: any) => {
             setCurrentDate(event.target.value)
         }
-        
-        const initializeAppointment = () => {
-            console.log('start appointment')
+
+        const initializeAppointment = (id: any) => {
+            const date = new Date(currentDate)
+            const payload = {
+                Id: id,
+                Fecha: date
+            }
+            setParams(payload)
             setShowCreate(true)
         }
-    
+
     //#endregion
-    
+
     //#region [ PROPERTIES ]
 
     //#endregion
@@ -129,14 +119,14 @@ export const ShowAppointmentsGeneral = () => {
                 <div className='row'>
                     {
                     rowsSpecialty.map((item: any, index: number) =>
-                        <div key={ index } className="col-auto p-1 m-1" onClick={ initializeAppointment }>
-                        <div className={ `card ${ styles_specialties[item.Id - 1].class }` }>
+                        <div key={ index } className="col-auto p-1 m-1" onClick={ () => initializeAppointment(item.Id_Especialidad) }>
+                        <div className={ `card ${ styles_specialties[item.Id_Especialidad - 1].class }` }>
                             <div className="overlay"></div>
                             <div className="circle">
-                            <FontAwesomeIcon icon={ styles_specialties[item.Id - 1].icon } size="2x"/>
+                            <FontAwesomeIcon icon={ styles_specialties[item.Id_Especialidad - 1].icon } size="2x"/>
                             </div>
                             <p>{ item.Nombre }</p>
-                            <small>3 citas disponibles</small>
+                            <small>{ item.Citas } citas disponibles</small>
                         </div>
                         </div>
                     )
@@ -148,8 +138,8 @@ export const ShowAppointmentsGeneral = () => {
                 <Loading show={ loading } />
                 }
                 {
-                showCreate &&
-                <CreateModal show={ showCreate } handleClose={ () => setShowCreate(false) }/>
+                !!showCreate &&
+                <CreateModal show={ showCreate } handleClose={ () => setShowCreate(false) } params={ params }/>
                 }
             </Fragment>
         )

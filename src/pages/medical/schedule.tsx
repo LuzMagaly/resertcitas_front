@@ -18,6 +18,9 @@ export const Schedule = ({}: childrenProps) => {
 
   //#region [ VARIABLES ]
 
+  const actual_date = new Date()
+  actual_date.setDate(actual_date.getDate() - 1)
+
   const daysWeek = days
   const [rows, setRows] = useState<any[]>([])
   const [rowsSpecialty, setRowsSpecialty] = useState<any[]>([])
@@ -143,10 +146,8 @@ export const Schedule = ({}: childrenProps) => {
       setLoading(true)
       const result = await saveSchedule(payload)
       setLoading(false)
-      if(result){
-        setShowTable(false)
-        getRows()
-      }
+      setShowTable(false)
+      getRows()
     }
 
   //#endregion

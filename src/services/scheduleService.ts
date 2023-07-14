@@ -22,6 +22,11 @@ export const getScheduleBySpecialty = async (payload: any) => {
     return apiControl(result)
 }
 
+export const getScheduleBasicBySpecialty = async (payload: any) => {
+    const result = await invoke('/schedule/getBasicBySpecialty', payload, true)
+    return apiControl(result)
+}
+
 export const saveSchedule = async (payload: any) => {
     const result = await invoke('/schedule/save', payload, true)
     return apiControl(result)

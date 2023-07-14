@@ -56,7 +56,7 @@ export const ScheduleTable = ({ show, handleClose, onSave, value }: { show: bool
   }
 
   const assignList = () => {
-    const result = dataList.filter((item: any) => item.especialidad.toString().includes(search) || item.nombres.includes(search.toUpperCase()))
+    const result = dataList.filter((item: any) => item.especialidad.toString().toUpperCase().includes(search.toUpperCase()) || item.nombres.toUpperCase().includes(search.toUpperCase()))
     setDataShow(result)
   }
 

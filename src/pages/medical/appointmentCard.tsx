@@ -1,10 +1,11 @@
 import { Col, Card } from "react-bootstrap"
 
 type childrenProps = {
-    value: any
+    value: any,
+    onClick: any
 }
 
-export const AppointmentCard = ({ value }: childrenProps) => {
+export const AppointmentCard = ({ value, onClick }: childrenProps) => {
 
     const getHours = (value: string): string => {
         const date = new Date(value)
@@ -16,8 +17,14 @@ export const AppointmentCard = ({ value }: childrenProps) => {
         return `${ date.getDate() < 10 ? '0' : '' }${ date.getDate() }/${ date.getMonth() + 1 < 10 ? '0' : '' }${ date.getMonth() + 1 }/${ date.getFullYear() }`
     }
 
+    const handleClick = (id: any) => {
+        if(onClick){
+            onClick(id)
+        }
+    }
+
     return (
-        <Col lg="2" md="3" sm="6" className="mb-4">
+        <Col lg="2" md="3" sm="6" className="mb-4 m-4 p-0" onClick={ () => handleClick(value.Id) }>
             <Card>
                 <Card.Body>
                     <Card.Title>{ `${ value.Consultorios.Nombre }, ${ value.Consultorios.Ubicacion }` }</Card.Title>

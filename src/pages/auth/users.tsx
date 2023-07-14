@@ -103,10 +103,7 @@ const Users = () => {
               <tr className="align-middle" style={{ textAlign: 'center' }}>
                 <th>ID</th>
                 <th>Username</th>
-                {/* <th>Correo</th> */}
                 <th>Nombres</th>
-                {/* <th>Apellido paterno</th> */}
-                {/* <th>Apellido materno</th> */}
                 <th>Rol</th>
                 <th>Estado</th>
                 <th>Visibilidad</th>
@@ -119,10 +116,7 @@ const Users = () => {
                   <tr key={ index }>
                     <td className="text-center">{ item.pkid }</td>
                     <td className="text-center">{ item.username }</td>
-                    {/* <td className="text-center">{ item.correo }</td> */}
                     <td className="text-center">{ item.nombres }</td>
-                    {/* <td className="text-center">{ item.apellido_Paterno }</td> */}
-                    {/* <td className="text-center">{ item.apellido_Materno }</td> */}
                     <td className="text-center">{ item.rol_Nombre }</td>
                     <td className="text-center">{ item.estado }</td>
                     <td style={{ minWidth: '200px' }}>{ item.visibilidades.map((element: any, i: number) => <span key={ i }>-{ element.nombre }<br/></span>) }</td>

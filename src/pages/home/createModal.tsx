@@ -51,15 +51,21 @@ export const CreateModal = ({ show, handleClose, params }: childrenProps) => {
     setConfirm(false)
     setLoading(true)
     const payload = {
-      Id_AgendaCalendario: selected,
-      Id_Paciente: session.Id,
-      Creado_Por: session.Id
+      Item: {
+        Id_AgendaCalendario: selected,
+        Id_Paciente: session.Id,
+        Creado_Por: session.Id
+      },
+      Select: params
     }
 
     console.log(payload)
     const result = await saveAppointment(payload)
     console.log(result)
     setLoading(false)
+    if(result){
+      handleClose()
+    }
   }
 
   //useEffect

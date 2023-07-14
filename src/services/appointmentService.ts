@@ -17,10 +17,7 @@ export const getAppointmentByPatient = async (id: number) => {
     return apiControl(result)
 }
 
-export const saveAppointment = async (item: any) => {
-    const payload = {
-        Item: item
-    }
+export const saveAppointment = async (payload: any) => {
     const result = await invoke('/appointment/save', payload, true)
     return apiControl(result)
 }

@@ -39,9 +39,10 @@ export const ShowAppointmentsGeneral = () => {
 
     //#region [ SOCKETS ]
 
-        socket.on('message', (message) => {
-            //console.log('Event reader from server!')
-            //console.log(message)
+        socket.on('CallBackAfterInsertAppointment', (response: any) => {
+            console.log('Event reader from server!')
+            console.log(response)
+            loadSchedules(JSON.parse(response))
         })
 
     //#endregion
@@ -82,7 +83,7 @@ export const ShowAppointmentsGeneral = () => {
         const initializeAppointment = (id: any) => {
             const date = new Date(currentDate)
             const payload = {
-                Id: id,
+                Id: [id],
                 Fecha: date
             }
             setParams(payload)

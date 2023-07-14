@@ -11,10 +11,11 @@ import { getScheduleBySpecialty } from "services/scheduleService"
 type childrenProps = {
     show: boolean,
     handleClose: any,
-    params: any
+    params: any,
+    socket: any
 }
 
-export const CreateModal = ({ show, handleClose, params }: childrenProps) => {
+export const CreateModal = ({ show, handleClose, params, socket }: childrenProps) => {
 
   const { session } = useContext(AuthContext)
   const [alert, setAlert] = useState(false)
@@ -28,19 +29,30 @@ export const CreateModal = ({ show, handleClose, params }: childrenProps) => {
     getRows()
   }, [])
 
+  
+  socket.on('CallBackAfterInsertAppointment', (response: any) => {
+    console.log('Event reader from server!')
+    console.log(response)
+    loadSchedules(response)
+  })
+
   const getRows = async () => {
     setLoading(true)
     const result = await getScheduleBySpecialty(params)
-    console.log(result)
+    setLoading(false)
+    loadSchedules(result)    
+  }
+
+  const loadSchedules = async (result: any) => {
     if(result && result.length && result.length > 0){
       setRows(result)
     }
     else{
-      setRows([])
+      console.log('incompatibles')
+      console.log(result)
+      handleClose()
     }
-    setLoading(false)
-    console.log(result)
-  }
+}
 
   const selectCalendar = (id: any) => {
     setSelected(id)

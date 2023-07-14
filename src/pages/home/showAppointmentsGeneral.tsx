@@ -8,7 +8,7 @@
     import { CreateModal } from 'pages/home/createModal'
     import { style_specialty } from 'constants/specialties'
     import { url } from "server/api"
-    import { getScheduleBySpecialty, getScheduleBasicBySpecialty } from 'services/scheduleService'
+    import { getScheduleBasicBySpecialty } from 'services/scheduleService'
     import 'styles/specialty.css'
 
 //#endregion
@@ -39,7 +39,7 @@ export const ShowAppointmentsGeneral = () => {
 
     //#region [ SOCKETS ]
 
-        socket.on('CallBackAfterInsertAppointment', (response: any) => {
+        socket.on('CallBackAfterInsertAppointmentBasic', (response: any) => {
             console.log('Event reader from server!')
             console.log(response)
             loadSchedules(JSON.parse(response))
@@ -140,7 +140,7 @@ export const ShowAppointmentsGeneral = () => {
                 }
                 {
                 !!showCreate &&
-                <CreateModal show={ showCreate } handleClose={ () => setShowCreate(false) } params={ params }/>
+                <CreateModal show={ showCreate } handleClose={ () => setShowCreate(false) } params={ params } socket={ socket }/>
                 }
             </Fragment>
         )

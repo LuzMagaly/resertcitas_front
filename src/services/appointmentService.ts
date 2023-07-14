@@ -29,3 +29,11 @@ export const updateAppointment = async (item: any) => {
     const result = await invoke('/appointment/update', payload, true)
     return apiControl(result)
 }
+
+export const changeStateAppointment = async (item: any) => {
+    const payload = {
+        Item: item
+    }
+    const result = await invoke('/appointment/change', payload, true)
+    return apiControl(result)
+}

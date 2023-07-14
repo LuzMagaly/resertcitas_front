@@ -25,14 +25,11 @@ export const CreateModal = ({ show, handleClose, params, socket }: childrenProps
   const [selected, setSelected] = useState<any[]>([])
 
   useEffect(() => {
-    console.log(session)
     getRows()
   }, [])
 
   
   socket.on('CallBackAfterInsertAppointment', (response: any) => {
-    console.log('Event reader from server!')
-    console.log(response)
     loadSchedules(response)
   })
 
@@ -48,8 +45,6 @@ export const CreateModal = ({ show, handleClose, params, socket }: childrenProps
       setRows(result)
     }
     else{
-      console.log('incompatibles')
-      console.log(result)
       handleClose()
     }
 }
@@ -65,15 +60,13 @@ export const CreateModal = ({ show, handleClose, params, socket }: childrenProps
     const payload = {
       Item: {
         Id_AgendaCalendario: selected,
-        Id_Paciente: session.Id,
+        Id_Paciente: session.Pacientes_Pacientes_Id_UsuarioToUsuarios.Id,
         Creado_Por: session.Id
       },
       Select: params
     }
 
-    console.log(payload)
     const result = await saveAppointment(payload)
-    console.log(result)
     setLoading(false)
     if(result){
       handleClose()

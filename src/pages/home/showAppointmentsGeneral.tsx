@@ -1,6 +1,6 @@
 //#region [ IMPORTS ]
 
-    import { Fragment, useEffect, useState } from 'react'
+    import { Fragment, useEffect, useState, useContext } from 'react'
     import io from 'socket.io-client'
     import { Container, Row, Col, Form } from 'react-bootstrap'
     import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -40,8 +40,6 @@ export const ShowAppointmentsGeneral = () => {
     //#region [ SOCKETS ]
 
         socket.on('CallBackAfterInsertAppointmentBasic', (response: any) => {
-            console.log('Event reader from server!')
-            console.log(response)
             loadSchedules(JSON.parse(response))
         })
 

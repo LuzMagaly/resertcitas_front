@@ -4,7 +4,7 @@ export const url = 'http://localhost:4500'
 export const invoke = async (path: string, data: any, isAuthenticated: boolean = true, method: string = 'POST') => {
     const instance = axios.create({
         baseURL: url,
-        timeout: 5000,
+        timeout: 0,
         headers: { 'Content-Type': "application/json" }
     });
 

@@ -32,6 +32,14 @@ export const Timetable = () => {
   const [selectedOffice, setSelectedOffice] = useState<any>()
 
   useEffect(() => {
+    if(session && session.Medicos_Medicos_Id_UsuarioToUsuarios && session.Medicos_Medicos_Id_UsuarioToUsuarios.Id){
+      setVisibility(true)
+    }
+    else{
+      setVisibility(false)
+      return
+    }
+    console.log(session)
     getDoctor()
   }, [])
 
@@ -189,7 +197,7 @@ export const Timetable = () => {
               }
           </Container>
         :
-        <span>No tienes acceso a esta página</span>
+        <span>Sólo los médicos pueden acceder a esta página</span>
       }
       {
         !!confirm &&

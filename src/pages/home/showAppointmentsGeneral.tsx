@@ -1,15 +1,14 @@
 //#region [ IMPORTS ]
 
     import { Fragment, useEffect, useState, useContext } from 'react'
-    import io from 'socket.io-client'
     import { Container, Row, Col, Form } from 'react-bootstrap'
     import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
     import { Loading } from 'components/alerts/loading'
     import { CreateModal } from 'pages/home/createModal'
     import { style_specialty } from 'constants/specialties'
-    import { url } from "server/api"
     import { getScheduleBasicBySpecialty } from 'services/scheduleService'
     import 'styles/specialty.css'
+    import { SocketContext } from 'providers/socketProvider'
 
 //#endregion
 
@@ -17,8 +16,7 @@
 export const ShowAppointmentsGeneral = () => {
     
     //#region [ VARIABLES ]
-
-        const socket = io(url)
+        const { socket } = useContext(SocketContext)
         const [currentDate, setCurrentDate] = useState<string>(new Date().toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2'))
         const [rowsSpecialty, setRowsSpecialty] = useState<any[]>([])
         const [loading, setLoading] = useState(false)

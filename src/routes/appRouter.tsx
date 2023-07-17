@@ -6,7 +6,7 @@ import { Content } from "components/layout/content";
 
 import { Home } from 'pages/home/home';
 import { Error } from 'pages/common/error';
-import { Appointment } from 'pages/medical/appointment';
+import { Appointment } from 'pages/admin/appointment';
 import { Doctor } from 'pages/persons/doctor';
 import { Patient } from 'pages/persons/patient';
 import { Profile } from 'pages/persons/profile';

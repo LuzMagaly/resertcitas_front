@@ -2,7 +2,7 @@ import { apiControl } from "errors/apiControl"
 import { invoke } from "server/api"
 
 export const getUserAll = async () => {
-  const result = await invoke('/user/getOne', {}, true)
+  const result = await invoke('/user/getALL', {}, true)
   return apiControl(result)
 }
 
@@ -10,6 +10,7 @@ export const getUserById = async (userId: number) => {
     const payload = {
         Id: userId
     }
+    console.log(payload)
     const result = await invoke('/user/getOne', payload, true)
     return apiControl(result)
 }

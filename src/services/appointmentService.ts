@@ -14,6 +14,11 @@ export const getAppointmentBydate = async (payload: any) => {
     return apiControl(result)
 }
 
+export const getAppointmentBySpecialty = async (payload: any) => {
+    const result = await invoke('/appointment/getBySpecialty', payload, true)
+    return apiControl(result)
+}
+
 export const getAppointmentByPatient = async (id: number) => {
     const payload = {
         Options: {

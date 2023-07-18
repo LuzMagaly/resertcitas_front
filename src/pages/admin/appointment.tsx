@@ -21,17 +21,13 @@ export const Appointment = () => {
   const [currentDate, setCurrentDate] = useState<string>(new Date().toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2'))
   const [selectedSpecialty, setSelectedSpecialty] = useState<any>(0)
 
-  const [loading, setLoading] = useState(false)
-  const [confirm, setConfirm] = useState(false)
-
-
   const [rows, setRows] = useState<any[]>([])
-  const [permisions, setPermisions] = useState<any[]>([])
   const [activeRow, setActiveRow] = useState<any>(null)
   const [show, setShow] = useState(false)
-  const [confirmUpdate, setConfirmUpdate] = useState<boolean>(false)
-  const [proccessUpdate, setProccessUpdate] = useState<boolean>(false)
-  const [alertUpdate, setAlertUpdate] = useState<boolean>(false)
+
+  const [loading, setLoading] = useState(false)
+  const [confirm, setConfirm] = useState({ state: false, title: '', message: '' })
+  const [alert, setAlert] = useState({ state: false, title: '', message: '' })
 
   useEffect(() => {
     getAllSpecialties()
@@ -53,17 +49,14 @@ export const Appointment = () => {
   }
 
   const getRows = async () => {
-    console.log(listSpecialties)
     const id_specialty: number[] = selectedSpecialty != 0 ? [parseInt(selectedSpecialty)] : listSpecialties.map((item: any) => item.Id)
     const date = new Date(currentDate)
     const payload = {
       Id: id_specialty,
       Fecha: date
     }
-    console.log(payload)
     setLoading(true)
     const result = await getAppointmentBySpecialty(payload)
-    console.log(result)
     setLoading(false)
     if(result && result.length && result.length > 0){
       setRows(result)
@@ -73,57 +66,29 @@ export const Appointment = () => {
     }
   }
 
-
-  const getPermisions = async () => {
-    const result: any = null//await getPermiso()
-    if(result && result.length && result.length > 0){
-      setPermisions(result)
-    }
-    getRows()
-  }
-
-  const showPermision = (id: number) => {
-    const found = permisions.find((item: any) => item.pkid == id)
-    if(found){
-      return found.nombre
-    }
-    else{
-      return 'No definido'
-    }
-  }
-
   const newRow = () => {
     handleShow()
     setActiveRow(null)
   }
 
-  const editRow = (id: number) => {
-    const item = rows.find((_: any) => _.pkid == id)
+  const changeStateRow = (id: number, operation: number,  title: string, message: string) => {
+    const item = rows.find((_: any) => _.Id == id)
     if(item){
       setActiveRow(item)
-      handleShow()
+      setConfirm({ state: true, title: title, message: message })
     }
   }
 
-  const deleteRow = (id: number) => {
-    const item = rows.find((_: any) => _.pkid == id)
-    if(item){
-      setActiveRow(item)
-      setConfirmUpdate(item)
-    }
-  }
-
-  const deleteFromDatabase = async () => {
-    setConfirmUpdate(false)
-    setProccessUpdate(true)
-    //deleting
+  const changeStateFromDatabase = async () => {
+    setConfirm({ state: false, title: '', message: '' })
+    setLoading(true)
     const result: any = null// await deleteRol(activeRow.pkid)
-    setProccessUpdate(false)
+    setLoading(false)
     if(result){
         getRows()
     }
     else{
-        setAlertUpdate(true)
+        setAlert({ state: true, title: '', message: '' })
     }
   }
 
@@ -221,10 +186,10 @@ export const Appointment = () => {
 
                     <td className="text-center">
                       <span>
-                        <Button className="mb-2" variant='success' onClick={ () => editRow(item.Id) }><FontAwesomeIcon icon={ faPen }/> Aprobar pago</Button>{ ' ' }
-                        <Button className="mb-2" variant='danger' onClick={ () => editRow(item.Id) }><FontAwesomeIcon icon={ faPen }/> Anular</Button>{ ' ' }
-                        <Button className="mb-2" variant='primary' onClick={ () => editRow(item.Id) }><FontAwesomeIcon icon={ faPen }/> Atender</Button>{ ' ' }
-                        <Button className="mb-2" variant='dark' onClick={ () => editRow(item.Id) }><FontAwesomeIcon icon={ faPen }/> Marcar inasistencia</Button>{ ' ' }
+                        <Button className="mb-2" variant='success' onClick={ () => changeStateRow(item.Id, 1, 'Aprobación de citas', '¿Deseas aprobar esta cita?') }><FontAwesomeIcon icon={ faPen }/> Aprobar pago</Button>{ ' ' }
+                        <Button className="mb-2" variant='danger' onClick={ () => changeStateRow(item.Id, 2, 'Anulación de citas', '¿Deseas anular esta cita? Esta operación no se puede revertir') }><FontAwesomeIcon icon={ faPen }/> Anular</Button>{ ' ' }
+                        <Button className="mb-2" variant='primary' onClick={ () => changeStateRow(item.Id, 3, 'Atención de paciente', '¿Desea marcar como atendido al paciente?') }><FontAwesomeIcon icon={ faPen }/> Atender</Button>{ ' ' }
+                        <Button className="mb-2" variant='dark' onClick={ () => changeStateRow(item.Id, 4, 'Atención de paciente', '¿Desea marcar como inasistencia al paciete? Esta operación no se puede revertir') }><FontAwesomeIcon icon={ faPen }/> Marcar inasistencia</Button>{ ' ' }
                       </span>
                     </td>
                   </tr>
@@ -235,19 +200,19 @@ export const Appointment = () => {
         </div>
       </Container>
       {
-        !!show && <PermisionModal show={ show } handleClose={ handleClose } value={ activeRow } getAllRows={ getRows } dataList={ permisions }/>
+        // !!show && <PermisionModal show={ show } handleClose={ handleClose } value={ activeRow } getAllRows={ getRows } dataList={ permisions }/>
       }
       {
-        confirmUpdate &&
-          <Confirm show={ confirmUpdate } handleClose={ () => setConfirmUpdate(false) } action={ deleteFromDatabase } title='Confirmación de eliminación' message={ `¿Está seguro de eliminar este Rol? No podrá deshacer los cambios` }/>
+        !!confirm.state &&
+          <Confirm show={ confirm.state } handleClose={ () => setConfirm({ state: false, title: '', message: '' }) } action={ changeStateFromDatabase } title={ confirm.title } message={ confirm.message }/>
       }
       {
-        !!proccessUpdate &&
-          <Proccessing show={ proccessUpdate } title='Procesando' message='No salga de esta página por favor...' />
+        !!loading &&
+          <Proccessing show={ loading } title='Procesando' message='No salga de esta página por favor...' />
       }
       {
-        !!alertUpdate &&
-          <Alert show={ alertUpdate } handleClose={ () => setAlertUpdate(false) } title='Error de eliminación' message='El rol no puede ser eliminado porque tiene usuarios anexados' />
+        !!alert.state &&
+          <Alert show={ alert.state } handleClose={ () => setAlert({ state: false, title: '', message: '' }) } title='Error de eliminación' message='El rol no puede ser eliminado porque tiene usuarios anexados' />
       }
     </Fragment>
   )

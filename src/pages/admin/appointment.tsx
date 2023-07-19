@@ -1,6 +1,6 @@
 //#region [ IMPORTS ]
 
-  import { Fragment, useState, useEffect } from "react"
+  import { Fragment, useState, useEffect, useContext } from "react"
   import { faPen, faBan, faCheck, faTimes } from "@fortawesome/free-solid-svg-icons"
   import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
   import { Container, Button, Table, Col, Form, Row } from "react-bootstrap"
@@ -11,12 +11,14 @@
   import { Alert } from "components/alerts/alert"
 import { getSpecialtyAll } from "services/specialtyService"
 import { getScheduleBySpecialty } from "services/scheduleService"
-import { getAppointmentBySpecialty } from "services/appointmentService"
+import { getAppointmentBySpecialty, updateStateAppointment } from "services/appointmentService"
+import { AuthContext } from "providers/authContext"
 
 //#endregion
 
 export const Appointment = () => {
 
+  const { session } = useContext(AuthContext)
   const [listSpecialties, setListSpecialties] = useState<any[]>([])
   const [currentDate, setCurrentDate] = useState<string>(new Date().toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2'))
   const [selectedSpecialty, setSelectedSpecialty] = useState<any>(0)
@@ -53,7 +55,8 @@ export const Appointment = () => {
     const date = new Date(currentDate)
     const payload = {
       Id: id_specialty,
-      Fecha: date
+      Fecha: date,
+      Estado: selectState()
     }
     setLoading(true)
     const result = await getAppointmentBySpecialty(payload)
@@ -66,23 +69,51 @@ export const Appointment = () => {
     }
   }
 
+  const selectState = () => {
+    return ['PENDIENTE', 'APROBADO', 'ANULADO', 'ASISTENCIA', 'INASISTENCIA']
+  }
+
   const newRow = () => {
     handleShow()
     setActiveRow(null)
   }
 
   const changeStateRow = (id: number, operation: number,  title: string, message: string) => {
-    const item = rows.find((_: any) => _.Id == id)
-    if(item){
-      setActiveRow(item)
-      setConfirm({ state: true, title: title, message: message })
+    const item = {
+      Id: id,
+      Actualizado_Por: session.Id,
+      Estado: ''
     }
+    setActiveRow(item)
+    setConfirm({ state: true, title: title, message: message })
+    switch (operation) {
+      case 1:
+        item.Estado = 'APROBADO'
+        //Aprobacion
+      break;
+        case 2:
+        item.Estado = 'ANULADO'
+        //Anulacion
+        break;
+      case 3:
+        item.Estado = 'ASISTENCIA'
+        //Asistencia
+        break;
+      case 4:
+        item.Estado = 'INASISTENCIA'
+        //Inasistencia
+        break;
+
+      default:
+        break;
+    }
+    
   }
 
   const changeStateFromDatabase = async () => {
     setConfirm({ state: false, title: '', message: '' })
     setLoading(true)
-    const result: any = null// await deleteRol(activeRow.pkid)
+    const result: any = await updateStateAppointment(activeRow)
     setLoading(false)
     if(result){
         getRows()
@@ -151,7 +182,7 @@ export const Appointment = () => {
             </Row><hr/>
           </Form>
         <div style={{ maxHeight: '10vh' }}>
-          <Table responsive className="table table-bordered table-striped table-hover" style={{ overflowX: 'auto', display: 'block', height: '75vh' }}>
+          <Table responsive className="table table-bordered table-striped table-hover" style={{ overflowX: 'auto', overflowY: 'auto', display: 'block', height: '75vh' }}>
             <thead>
               <tr className="align-middle" style={{ textAlign: 'center' }}>
                 <th>ID</th>

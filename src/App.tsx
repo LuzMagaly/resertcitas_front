@@ -7,12 +7,12 @@ import { SocketProvider } from "providers/socketProvider";
 
 export const App = () => {
   return (
+    <SocketProvider>
       <AuthProvider>
         <DataProvider>
-          <SocketProvider>
             <AppRouter/>
-          </SocketProvider>
         </DataProvider>
       </AuthProvider>
+    </SocketProvider>
   );
 }

@@ -1,7 +1,7 @@
 import { Fragment, useContext, useEffect, useState } from 'react'
 import { Container, Button, Card, Col, Row } from 'react-bootstrap'
 import { ShowAppointmentsGeneral } from './showAppointmentsGeneral'
-import { changeStateAppointment, getAppointmentByPatient, updateAppointment } from 'services/appointmentService'
+import { updateStateAppointment, getAppointmentByPatient, updateAppointment } from 'services/appointmentService'
 import { AuthContext } from 'providers/authContext'
 import { Confirm } from 'components/alerts/confirm'
 import { Proccessing } from 'components/alerts/proccessing'
@@ -11,7 +11,7 @@ export const Home = () => {
   const { session } = useContext(AuthContext)
   const [access, setAccess] = useState<boolean>(false)
   const [rows, setRows] = useState<any[]>([])
-  const [anulateRow, setAnulateRow] = useState<any[]>([])
+  const [anulateRow, setAnulateRow] = useState<any>(null)
   const [confirm, setConfirm] = useState<boolean>(false)
   const [proccessing, setProccessing] = useState<boolean>(false)
 
@@ -48,16 +48,22 @@ export const Home = () => {
   }
 
   const anulateAppointment = (id: any) => {
-    setAnulateRow(id)
+    const item = {
+      Id: id,
+      Actualizado_Por: session.Id,
+      Estado: 'ANULADO'
+    }
+    setAnulateRow(item)
     setConfirm(true)
   }
 
-  const anulateRowFromDatabase = () => {
-    const payload = {
-
+  const anulateRowFromDatabase = async () => {
+    setConfirm(false)
+    setProccessing(true)
+    if(anulateRow){
+      await anulateAppointment(anulateRow)
     }
-    const result = changeStateAppointment(payload)
-
+    setProccessing(false)
   }
 
   return (

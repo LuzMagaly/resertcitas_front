@@ -12,10 +12,11 @@ type childrenProps = {
     show: boolean,
     handleClose: any,
     params: any,
-    socket: any
+    socket: any,
+    patient?: any
 }
 
-export const CreateModal = ({ show, handleClose, params, socket }: childrenProps) => {
+export const CreateModal = ({ show, handleClose, params, socket, patient }: childrenProps) => {
 
   const { session } = useContext(AuthContext)
   const [alert, setAlert] = useState(false)
@@ -60,12 +61,13 @@ export const CreateModal = ({ show, handleClose, params, socket }: childrenProps
     const payload = {
       Item: {
         Id_AgendaCalendario: selected,
-        Id_Paciente: session.Pacientes_Pacientes_Id_UsuarioToUsuarios.Id,
+        Id_Paciente: patient? patient : session.Pacientes_Pacientes_Id_UsuarioToUsuarios.Id,
         Creado_Por: session.Id
       },
       Select: params
     }
 
+    console.log(payload)
     const result = await saveAppointment(payload)
     setLoading(false)
     if(result){

@@ -13,6 +13,7 @@ import { getSpecialtyAll } from "services/specialtyService"
 import { getScheduleBySpecialty } from "services/scheduleService"
 import { getAppointmentBySpecialty, updateStateAppointment } from "services/appointmentService"
 import { AuthContext } from "providers/authContext"
+import CreateAppointment from "./createAppointment"
 
 //#endregion
 
@@ -231,7 +232,8 @@ export const Appointment = () => {
         </div>
       </Container>
       {
-        // !!show && <PermisionModal show={ show } handleClose={ handleClose } value={ activeRow } getAllRows={ getRows } dataList={ permisions }/>
+        !!show && 
+        <CreateAppointment show={ show } handleClose={ handleClose }/>
       }
       {
         !!confirm.state &&

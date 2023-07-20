@@ -13,7 +13,7 @@
 //#endregion
 
 //This components usign unique sockets
-export const ShowAppointmentsGeneral = () => {
+export const ShowAppointmentsGeneral = ({ id }: { id?: string }) => {
     
     //#region [ VARIABLES ]
         const { socket } = useContext(SocketContext)
@@ -136,7 +136,7 @@ export const ShowAppointmentsGeneral = () => {
                 }
                 {
                 !!showCreate &&
-                <CreateModal show={ showCreate } handleClose={ () => setShowCreate(false) } params={ params } socket={ socket }/>
+                <CreateModal show={ showCreate } handleClose={ () => setShowCreate(false) } params={ params } socket={ socket } patient={ id }/>
                 }
             </Fragment>
         )

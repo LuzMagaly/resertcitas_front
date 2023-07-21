@@ -6,11 +6,15 @@ export const getUserAll = async () => {
   return apiControl(result)
 }
 
+export const getUserAllShort = async () => {
+  const result = await invoke('/user/getAllShort', {}, true)
+  return apiControl(result)
+}
+
 export const getUserById = async (userId: number) => {
     const payload = {
         Id: userId
     }
-    console.log(payload)
     const result = await invoke('/user/getOne', payload, true)
     return apiControl(result)
 }
@@ -37,5 +41,10 @@ export const updateUser = async (payload: any) => {
 
 export const updatePassword = async (payload: any) => {
   const result = await invoke('/user/changePass', payload, true)
+  return apiControl(result)
+}
+
+export const updateRol = async (payload: any) => {
+  const result = await invoke('/user/updateRol', payload, true)
   return apiControl(result)
 }

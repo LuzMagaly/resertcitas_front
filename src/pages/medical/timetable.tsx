@@ -39,7 +39,6 @@ export const Timetable = () => {
       setVisibility(false)
       return
     }
-    console.log(session)
     getDoctor()
   }, [])
 

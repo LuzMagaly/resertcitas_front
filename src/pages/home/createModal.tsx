@@ -66,8 +66,6 @@ export const CreateModal = ({ show, handleClose, params, socket, patient }: chil
       },
       Select: params
     }
-
-    console.log(payload)
     const result = await saveAppointment(payload)
     setLoading(false)
     if(result){

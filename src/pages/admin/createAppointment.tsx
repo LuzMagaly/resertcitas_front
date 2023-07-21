@@ -17,7 +17,7 @@ const CreateAppointment = ({ show, handleClose }: childrenProps) => {
     getRows()
   }, [])
   
-  const getRows = async () => {const result = await getPatientAll(); console.log(result); if(result && result.length && result.length > 0) { setPatientList(formatList(result)) } else { setPatientList([]) }}
+  const getRows = async () => {const result = await getPatientAll(); if(result && result.length && result.length > 0) { setPatientList(formatList(result)) } else { setPatientList([]) }}
 
   const formatList = (items: any[]): any[] => items.map((itm: any) => { return { value: itm.Id, label: `${ itm.Usuarios_Pacientes_Id_UsuarioToUsuarios
 .DNI
@@ -25,7 +25,6 @@ const CreateAppointment = ({ show, handleClose }: childrenProps) => {
 }` } })
 
   const handleChangePatient = (items: any) => {
-    console.log(items)
     setPatientSelected(items)
   }
   return (

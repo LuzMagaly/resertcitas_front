@@ -7,8 +7,8 @@ export const PermisionModal = ({ show, handleClose, value, getAllRows, dataList 
         let arrayTemp: any[] = []
         arrayInn.map((element: any) => {
             const item = {
-                value: element.pkid,
-                label: element.nombre
+                value: element.Id,
+                label: element.Nombre
             }
             arrayTemp.push(item)
         })

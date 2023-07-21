@@ -16,7 +16,6 @@ export const Home = () => {
   const [proccessing, setProccessing] = useState<boolean>(false)
 
   useEffect(() => {
-    console.log(session)
     if(session && session.Pacientes_Pacientes_Id_UsuarioToUsuarios && session.Pacientes_Pacientes_Id_UsuarioToUsuarios.Id){
       setAccess(true)
     }
@@ -34,7 +33,6 @@ export const Home = () => {
     else{
       setRows([])
     }
-    console.log(result)
   }
 
   const getHours = (value: string): string => {
